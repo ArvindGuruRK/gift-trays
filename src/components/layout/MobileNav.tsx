@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { drawerVariants, staggerContainer, staggerItem } from "@/lib/animations";
-import { ThattuIcon } from "@/components/ui/Motifs";
+import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { Button } from "@/components/ui/Button";
 import { X, Sparkles, Phone, MessageCircle } from "lucide-react";
 import { useLenis } from "lenis/react";
@@ -58,8 +58,10 @@ export function MobileNav({ isOpen, onClose, links, currentPath }: MobileNavProp
             {/* Drawer Header */}
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-border/50">
-                <div className="flex items-center gap-2.5">
-                  <ThattuIcon className="w-6 h-6 text-primary" />
+                <div className="flex items-center gap-3">
+                  <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
+                    <DiyaLogo size={66} className="absolute pointer-events-none" />
+                  </div>
                   <span className="font-serif text-lg font-semibold text-foreground">
                     Seer Varisai Thattu
                   </span>

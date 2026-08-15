@@ -25,6 +25,7 @@ import { Toast } from "@/components/ui/Toast";
 import { Drawer } from "@/components/ui/Drawer";
 import { OrnamentalDivider } from "@/components/ui/OrnamentalDivider";
 import { LotusMotif, KolamCornerFlourish, ThattuIcon } from "@/components/ui/Motifs";
+import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { SplashLoader } from "@/components/ui/SplashLoader";
 import { COLOR_TOKENS, COLOR_USAGE_RATIOS, TYPOGRAPHY_TOKENS, SPACING_SCALE } from "@/lib/tokens";
 import { motion } from "motion/react";
@@ -932,10 +933,10 @@ export default function DesignSystemPage() {
               <p className="text-xs text-muted-foreground">Realistic traditional antique-gold Kolam corner flourish artwork asset.</p>
             </div>
 
-            <div className="p-6 rounded-xl bg-card border border-border flex flex-col items-center text-center gap-3 shadow-warm-sm">
-              <ThattuIcon size={48} className="text-primary" />
-              <h4 className="font-serif text-lg font-semibold">Ceremonial Thattu Tray</h4>
-              <p className="text-xs text-muted-foreground">The central brass tray vector icon representing the core business service.</p>
+            <div className="p-6 rounded-xl bg-card border border-accent/40 flex flex-col items-center text-center gap-3 shadow-warm-md bg-gradient-to-b from-amber-500/10 to-transparent">
+              <DiyaLogo size={84} />
+              <h4 className="font-serif text-lg font-semibold text-foreground">Diwali Diya Brand Logo</h4>
+              <p className="text-xs text-muted-foreground">Official website logo featuring animated Diwali Diya Lottie animation (diwali-diya.json).</p>
             </div>
 
             <div className="p-6 rounded-xl bg-card border border-border flex flex-col items-center text-center gap-3 shadow-warm-sm justify-between">

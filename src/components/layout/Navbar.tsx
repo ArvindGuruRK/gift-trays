@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { ThattuIcon } from "@/components/ui/Motifs";
+import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { Sparkles, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,22 +40,22 @@ export function Navbar() {
         className={cn(
           "sticky top-0 z-40 w-full transition-all duration-300",
           isScrolled
-            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-3"
-            : "bg-background/80 backdrop-blur-sm py-5"
+            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-2"
+            : "bg-background/80 backdrop-blur-sm py-3"
         )}
       >
         <Container size="xl">
           <div className="relative flex items-center justify-between">
             {/* Brand Logo */}
             <Link href="/" className="flex items-center gap-3 group z-10">
-              <div className="w-10 h-10 rounded-full bg-primary/10 border border-accent/40 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                <ThattuIcon className="w-5 h-5 text-primary" />
+              <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                <DiyaLogo size={84} className="absolute pointer-events-none transition-transform duration-300 group-hover:scale-110" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+              <div className="flex flex-col justify-center">
+                <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors leading-tight">
                   Seer Varisai Thattu
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.18em] text-accent font-semibold -mt-1">
+                <span className="text-[10px] uppercase tracking-[0.18em] text-accent font-semibold">
                   Traditional Ceremonial Trays
                 </span>
               </div>

@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { ThattuIcon, LotusMotif } from "@/components/ui/Motifs";
+import { LotusMotif } from "@/components/ui/Motifs";
+import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { Phone, Mail, MapPin, MessageCircle, Heart } from "lucide-react";
 
 export function Footer() {
@@ -12,8 +13,8 @@ export function Footer() {
           {/* Brand Story Column */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 border border-accent/40 flex items-center justify-center">
-                <ThattuIcon className="w-5 h-5 text-primary" />
+              <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                <DiyaLogo size={84} className="absolute pointer-events-none" />
               </div>
               <span className="font-serif text-2xl font-semibold tracking-tight text-foreground">
                 Seer Varisai Thattu
