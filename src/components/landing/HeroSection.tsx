@@ -102,7 +102,7 @@ export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps
                   className="w-full flex items-center justify-center scale-110 sm:scale-120 lg:scale-[1.28] transform-gpu origin-center"
                 >
                   <Image
-                    src="/gallery/asserts/Ceremonial_trays_round.png"
+                    src="https://res.cloudinary.com/khenir6q/image/upload/v1786830153/Ceremonial_trays_round.png"
                     alt="Seer Varisai Thattu Royal Arrangement"
                     width={800}
                     height={800}

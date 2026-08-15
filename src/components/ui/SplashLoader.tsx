@@ -102,7 +102,7 @@ export function SplashLoader({
             <div className="w-64 h-64 sm:w-[300px] sm:h-[300px] rounded-full bg-[#4A141D]/90 border-2 border-accent/60 shadow-2xl shadow-accent/30 flex items-center justify-center p-0 backdrop-blur-md overflow-hidden">
               {isMounted ? (
                 <video
-                  src="/lottie/Ornate_brass_platter_rotating_202608112357-Picsart-BackgroundRemover.webm"
+                  src="https://res.cloudinary.com/khenir6q/video/upload/v1786829708/Ornate_brass_platter_rotating_202608112357-Picsart-BackgroundRemover.webm"
                   autoPlay
                   loop
                   muted
