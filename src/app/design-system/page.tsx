@@ -616,7 +616,7 @@ export default function DesignSystemPage() {
               category="Wedding Special"
               trayCount={11}
               startingPrice="₹24,999"
-              imageUrl="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop"
+              imageUrl="/gallery/photos/wedding-seer-varisai-stage.jpeg"
               imageAlt="Royal Wedding Seer Varisai Trays"
               description="Complete traditional set featuring fresh fruit arrangements, dry fruits, sweets, coconuts, flowers, and silver/brass accessories."
               onEnquire={() => setIsModalOpen(true)}
@@ -627,7 +627,7 @@ export default function DesignSystemPage() {
               title="Engagement Thamboolam Collection"
               subtitle="Traditional Ceremonial"
               itemCount="14 Designs"
-              imageUrl="https://images.unsplash.com/photo-1545232979-fbf592320755?q=80&w=800&auto=format&fit=crop"
+              imageUrl="/gallery/photos/betel-leaf-peacock-rose-gift.jpeg"
               imageAlt="Engagement Thamboolam Arrangements"
               onClick={() => setIsModalOpen(true)}
             />
@@ -1158,7 +1158,7 @@ export default function DesignSystemPage() {
 
                 <GSAPImageReveal direction="up" className="h-48 w-full">
                   <img
-                    src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop"
+                    src="/gallery/photos/daisy-mandala-tray-spread.jpeg"
                     alt="GSAP Mask Reveal Demo"
                     className="w-full h-full object-cover"
                   />

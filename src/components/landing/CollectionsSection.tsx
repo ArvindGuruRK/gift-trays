@@ -28,7 +28,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Royal Wedding Seer Varisai Sets",
     subtitle: "Ceremonial Wedding",
     itemCount: "11–21 Trays Set",
-    imageUrl: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/wedding-seer-varisai-stage.jpeg",
     imageAlt: "Wedding Seer Varisai Trays",
     description: "Complete traditional set with fruit pyramids, dry fruits, ghee sweets, decorated coconuts, silk towels, and brass lamps."
   },
@@ -38,7 +38,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Engagement Thamboolam Collection",
     subtitle: "Nitchayathartham",
     itemCount: "7–11 Trays Set",
-    imageUrl: "https://images.unsplash.com/photo-1545232979-fbf592320755?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/betel-leaf-peacock-rose-gift.jpeg",
     imageAlt: "Engagement Thamboolam Arrangements",
     description: "Betel leaves, supari, ring exchange platters, fresh jasmine garlands, and handcrafted gift hampers."
   },
@@ -48,7 +48,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Seemantham & Valaikappu Special",
     subtitle: "Traditional Baby Shower",
     itemCount: "5–9 Trays Set",
-    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/white-chrysanthemum-leaf-mandala-hero.jpeg",
     imageAlt: "Seemantham Gift Trays",
     description: "7 varieties of traditional sweets, glass bangles tray arrangement, lotus decor, and sari presentation platter."
   },
@@ -58,7 +58,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Grahapravesam Auspicious Trays",
     subtitle: "Housewarming Ceremony",
     itemCount: "5–7 Trays Set",
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/gold-tray-halwa-mandala-spread.jpeg",
     imageAlt: "Grahapravesam Trays",
     description: "Traditional Kamatchi Amman lamp tray, vilakku set, coconut thamboolam, and seasonal fruit baskets."
   },
@@ -68,7 +68,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Custom Designer Theme Sets",
     subtitle: "Bespoke Arrangements",
     itemCount: "Tailored Trays",
-    imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/rose-mandala-pineapple-tray-spread-1.jpeg",
     imageAlt: "Custom Designer Trays",
     description: "Tailored to your specific color theme, flower preference, imported chocolates, or custom brass artifacts."
   },
@@ -78,7 +78,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Heritage Silk & Saree Presentation",
     subtitle: "Kanchipuram Silk Special",
     itemCount: "3–5 Trays Set",
-    imageUrl: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/wedding-mandapam-full-stage-spread.jpeg",
     imageAlt: "Silk Saree Presentation",
     description: "Elegant silk saree folding, dhoti set display, gold embroidered coconuts, and lotus floral borders."
   }
@@ -100,7 +100,7 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
       <Container size="xl">
         <GSAPTextReveal as="div">
           <Heading
-            eyebrow="Curated Portfolio"
+            eyebrow="Our Work"
             title="Our Seer Varisai Collections"
             subtitle="Browse curated tray arrangements designed for every sacred South Indian occasion."
             align="center"

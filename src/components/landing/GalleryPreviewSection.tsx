@@ -25,7 +25,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "15-Tray Fruit & Sweet Arrangement",
     location: "Grand Kalyana Mandapam, Royal Stage",
-    imageUrl: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-1.jpeg",
     imageAlt: "15-Tray Fruit & Sweet Arrangement"
   },
   {
@@ -33,7 +33,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "engagement",
     title: "Nitchayathartham Betel & Jasmine Set",
     location: "Heritage Betrothal Pavilion",
-    imageUrl: "https://images.unsplash.com/photo-1545232979-fbf592320755?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-2.jpeg",
     imageAlt: "Nitchayathartham Betel & Jasmine Set"
   },
   {
@@ -41,7 +41,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "seemantham",
     title: "Seemantham Bangles & Lotus Tray",
     location: "Ceremonial Reception Stage",
-    imageUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-3.jpeg",
     imageAlt: "Seemantham Bangles & Lotus Tray"
   },
   {
@@ -49,7 +49,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Imperial Brass Kuthuvilakku Lamp Platter",
     location: "Imperial Mandapam Shrine",
-    imageUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-4.jpeg",
     imageAlt: "Imperial Brass Kuthuvilakku Lamp Platter"
   },
   {
@@ -57,7 +57,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "housewarming",
     title: "Grahapravesam Banana Flower Thamboolam",
     location: "Auspicious Sacred Stage",
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/pink-ribbon-daisy-mandala-spread-2.jpeg",
     imageAlt: "Grahapravesam Banana Flower Thamboolam"
   },
   {
@@ -65,8 +65,128 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "custom",
     title: "Lotus & Dry Fruit Pyramid Basket",
     location: "Destination Wedding Resort",
-    imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "/gallery/photos/daisy-mandala-grand-spread-2.jpeg",
     imageAlt: "Lotus & Dry Fruit Pyramid Basket"
+  },
+  {
+    id: "g7",
+    category: "wedding",
+    title: "Assorted Fruit & Snack Tray Set",
+    location: "Ceremonial Prep Table",
+    imageUrl: "/gallery/photos/assorted-fruit-snack-trays.jpeg",
+    imageAlt: "Assorted Fruit & Snack Tray Set"
+  },
+  {
+    id: "g8",
+    category: "custom",
+    title: "Eleven-Tray Fruit & Nut Assortment",
+    location: "Custom Theme Setup",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-nut-closeup.jpeg",
+    imageAlt: "Eleven-Tray Fruit & Nut Assortment"
+  },
+  {
+    id: "g9",
+    category: "engagement",
+    title: "Fruit & Sweets Tray Grid",
+    location: "Engagement Ceremony Table",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-1.jpeg",
+    imageAlt: "Fruit & Sweets Tray Grid"
+  },
+  {
+    id: "g10",
+    category: "seemantham",
+    title: "Fruit & Sweets Tray Grid",
+    location: "Seemantham Ceremony Table",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-2.jpeg",
+    imageAlt: "Fruit & Sweets Tray Grid"
+  },
+  {
+    id: "g11",
+    category: "housewarming",
+    title: "Fruit & Sweets Tray Grid",
+    location: "Grahapravesam Table Setup",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-3.jpeg",
+    imageAlt: "Fruit & Sweets Tray Grid"
+  },
+  {
+    id: "g12",
+    category: "wedding",
+    title: "Grand Mandala Fruit Arrangement",
+    location: "Prep Kitchen Floor",
+    imageUrl: "/gallery/photos/grand-mandala-arrangement.jpeg",
+    imageAlt: "Grand Mandala Fruit Arrangement"
+  },
+  {
+    id: "g13",
+    category: "custom",
+    title: "Grand Assorted Tray Collection",
+    location: "Staging Floor Layout",
+    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-1.jpeg",
+    imageAlt: "Grand Assorted Tray Collection"
+  },
+  {
+    id: "g14",
+    category: "wedding",
+    title: "Grand Assorted Tray Collection",
+    location: "Staging Floor Layout",
+    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-2.jpeg",
+    imageAlt: "Grand Assorted Tray Collection"
+  },
+  {
+    id: "g15",
+    category: "seemantham",
+    title: "Green & Gold Dry Fruit Trays",
+    location: "Ceremonial Tray Set",
+    imageUrl: "/gallery/photos/green-gold-dry-fruit-trays.jpeg",
+    imageAlt: "Green & Gold Dry Fruit Trays"
+  },
+  {
+    id: "g16",
+    category: "engagement",
+    title: "Heart-Pattern Eight Tray Set",
+    location: "Engagement Tray Display",
+    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-1.jpeg",
+    imageAlt: "Heart-Pattern Eight Tray Set"
+  },
+  {
+    id: "g17",
+    category: "wedding",
+    title: "Heart-Pattern Eight Tray Set",
+    location: "Wedding Tray Display",
+    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-2.jpeg",
+    imageAlt: "Heart-Pattern Eight Tray Set"
+  },
+  {
+    id: "g18",
+    category: "housewarming",
+    title: "Kitchen Floor Tray Spread",
+    location: "Prep Kitchen Floor",
+    imageUrl: "/gallery/photos/kitchen-floor-eleven-tray-spread.jpeg",
+    imageAlt: "Kitchen Floor Tray Spread"
+  },
+  {
+    id: "g19",
+    category: "seemantham",
+    title: "Laddu, Grape & Pistachio Tray Set",
+    location: "Ceremonial Sweets Table",
+    imageUrl: "/gallery/photos/laddu-grape-pistachio-tray-set.jpeg",
+    imageAlt: "Laddu, Grape & Pistachio Tray Set"
+  },
+  {
+    id: "g20",
+    category: "wedding",
+    title: "Grand Tray Spread",
+    location: "Staging Floor Layout",
+    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-1.jpeg",
+    imageAlt: "Grand Tray Spread"
+  },
+  {
+    id: "g21",
+    category: "custom",
+    title: "Grand Tray Spread",
+    location: "Staging Floor Layout",
+    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-2.jpeg",
+    imageAlt: "Grand Tray Spread"
   }
 ];
 
@@ -86,7 +206,7 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
       <Container size="xl">
         <GSAPTextReveal as="div">
           <Heading
-            eyebrow="Real Event Portfolio"
+            eyebrow="From Real Celebrations"
             title="Gallery of Completed Arrangements"
             subtitle="Explore real-world photographs showcasing magnificent packed tray plating and authentic wedding ceremony arrangements."
             align="center"

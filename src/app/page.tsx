@@ -19,9 +19,7 @@ import {
   HeroSection,
   BrandIntroSection,
   CollectionsSection,
-  ArrangementShowcaseSection,
   OccasionsSection,
-  CustomizationSection,
   HowItWorksSection,
   GalleryPreviewSection,
   TestimonialsSection,
@@ -58,15 +56,6 @@ export default function HomePage() {
     }
   };
 
-  const handleProductClick = (product: any) => {
-    setModalTitle(product.title);
-    setModalDescription(product.description);
-    setSelectedTrays(product.trayCount);
-    setSelectedOccasion(product.category);
-    setSelectedPrice(product.startingPrice);
-    setIsModalOpen(true);
-  };
-
   const handleCollectionClick = (collection: any) => {
     setModalTitle(collection.title);
     setModalDescription(collection.description);
@@ -79,14 +68,6 @@ export default function HomePage() {
   const handleOccasionClick = (occasionName: string) => {
     setSelectedOccasion(occasionName);
     scrollToEnquiry();
-  };
-
-  const handleCustomizationProceed = (details: any) => {
-    setSelectedTrays(details.trayCount);
-    setSelectedPrice(`₹${details.estimatedTotal.toLocaleString("en-IN")}`);
-    setModalTitle(`${details.trayCount} Trays ${details.flowerTheme.replace("-", " & ")} Package`);
-    setModalDescription(`Includes ${details.includeSweets ? "ghee sweets, " : ""}${details.includeFruits ? "exotic fruits, " : ""}${details.includeSilk ? "silk platters" : ""}.`);
-    setIsModalOpen(true);
   };
 
   const handleFormSubmit = (formData: any) => {
@@ -105,34 +86,28 @@ export default function HomePage() {
       {/* Section 1: Hero Section with GSAP Timeline Sequence (waits for splash completion) */}
       <HeroSection isSplashActive={isSplashActive} onEnquireClick={scrollToEnquiry} />
 
-      {/* Section 2: Brand Heritage & Story */}
-      <BrandIntroSection />
-
-      {/* Section 4: Filterable Collections Portfolio */}
+      {/* Section 2: Filterable Collections Portfolio */}
       <CollectionsSection onSelectCollection={handleCollectionClick} />
 
-      {/* Section 5: Signature Product Arrangements Showcase */}
-      <ArrangementShowcaseSection onProductClick={handleProductClick} />
+      {/* Section 3: Brand Heritage & Story */}
+      <BrandIntroSection />
 
-      {/* Section 6: Occasions We Serve */}
+      {/* Section 4: Occasions We Serve */}
       <OccasionsSection onSelectOccasion={handleOccasionClick} />
 
-      {/* Section 7: Interactive Tray Customization Calculator */}
-      <CustomizationSection onProceedToEnquiry={handleCustomizationProceed} />
-
-      {/* Section 8: Step-by-Step GSAP Horizontal Scroll Track */}
+      {/* Section 5: Step-by-Step GSAP Horizontal Scroll Track */}
       <HowItWorksSection />
 
-      {/* Section 9: Real Photo Gallery Preview */}
+      {/* Section 6: Real Photo Gallery Preview */}
       <GalleryPreviewSection onImageClick={(item) => handleCollectionClick({ title: item.title, description: item.location, subtitle: item.category })} />
 
-      {/* Section 10: Verified Customer Testimonials */}
+      {/* Section 7: Verified Customer Testimonials */}
       <TestimonialsSection />
 
-      {/* Section 11: Interactive Customer Enquiry Form */}
+      {/* Section 8: Interactive Customer Enquiry Form */}
       <InteractiveEnquirySection onSubmitEnquiry={handleFormSubmit} />
 
-      {/* Section 12: Final Deep Maroon Festive CTA */}
+      {/* Section 9: Final Deep Maroon Festive CTA */}
       <FinalCTASection onEnquireClick={scrollToEnquiry} />
 
       {/* Global Interactive Modal Dialog */}
