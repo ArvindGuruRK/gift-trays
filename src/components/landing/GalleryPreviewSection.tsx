@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/Heading";
 import { ImageFrame } from "@/components/ui/ImageFrame";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { GSAPTextReveal, GSAPScrollReveal } from "@/components/animations";
+import { GSAPTextReveal, GSAPPageEmerge } from "@/components/animations";
 import { Eye, Sparkles } from "lucide-react";
 
 interface GalleryItem {
@@ -202,76 +202,82 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
     : GALLERY_ITEMS.filter((g) => g.category === activeTab);
 
   return (
-    <Section theme="ivory" padding="lg">
-      <Container size="xl">
-        <GSAPTextReveal as="div">
-          <Heading
-            eyebrow="From Real Celebrations"
-            title="Gallery of Completed Arrangements"
-            subtitle="Explore real-world photographs showcasing magnificent packed tray plating and authentic wedding ceremony arrangements."
-            align="center"
-            hasDivider
-          />
-        </GSAPTextReveal>
+    // Whole section — background included — rises and fades in as one panel
+    // as it enters view, right after the "How We Craft" horizontal track
+    // releases its pin, rather than just the text/photos floating in over a
+    // static backdrop. The grid below is marked data-emerge-deep so it
+    // settles a beat behind the heading, giving the reveal real parallax depth.
+    <GSAPPageEmerge>
+      <Section theme="ivory" padding="lg">
+        <Container size="xl">
+          <GSAPTextReveal as="div">
+            <Heading
+              eyebrow="From Real Celebrations"
+              title="Gallery of Completed Arrangements"
+              subtitle="Explore real-world photographs showcasing magnificent packed tray plating and authentic wedding ceremony arrangements."
+              align="center"
+              hasDivider
+            />
+          </GSAPTextReveal>
 
-        {/* Gallery Filter Buttons */}
-        <div className="flex items-center justify-center gap-2 flex-wrap mt-8 mb-10">
-          {[
-            { id: "all", label: "All Photos" },
-            { id: "wedding", label: "Weddings" },
-            { id: "engagement", label: "Engagements" },
-            { id: "seemantham", label: "Seemantham" },
-            { id: "housewarming", label: "Housewarming" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-warm-sm"
-                  : "bg-card text-foreground/80 border border-border hover:bg-secondary"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+          {/* Gallery Filter Buttons */}
+          <div className="flex items-center justify-center gap-2 flex-wrap mt-8 mb-10">
+            {[
+              { id: "all", label: "All Photos" },
+              { id: "wedding", label: "Weddings" },
+              { id: "engagement", label: "Engagements" },
+              { id: "seemantham", label: "Seemantham" },
+              { id: "housewarming", label: "Housewarming" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer ${
+                  activeTab === tab.id
+                    ? "bg-primary text-primary-foreground shadow-warm-sm"
+                    : "bg-card text-foreground/80 border border-border hover:bg-secondary"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-        {/* Photo Grid */}
-        <GSAPScrollReveal type="fadeUp" stagger={0.12} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              data-gsap-item
-              className="group cursor-pointer rounded-xl overflow-hidden border border-border bg-card shadow-warm-sm hover:shadow-warm-lg transition-all"
-              onClick={() => onImageClick?.(item)}
-            >
-              <div className="relative overflow-hidden">
-                <ImageFrame
-                  src={item.imageUrl}
-                  alt={item.imageAlt}
-                  aspectRatio="4/3"
-                  className="group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-card/90 text-primary flex items-center justify-center shadow-warm-md">
-                    <Eye className="w-5 h-5 text-accent" />
+          {/* Photo Grid */}
+          <div data-emerge-deep className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+              <div
+                key={item.id}
+                className="group cursor-pointer rounded-xl overflow-hidden border border-border bg-card shadow-warm-sm hover:shadow-warm-lg transition-all"
+                onClick={() => onImageClick?.(item)}
+              >
+                <div className="relative overflow-hidden">
+                  <ImageFrame
+                    src={item.imageUrl}
+                    alt={item.imageAlt}
+                    aspectRatio="4/3"
+                    className="group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-card/90 text-primary flex items-center justify-center shadow-warm-md">
+                      <Eye className="w-5 h-5 text-accent" />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="p-4 flex flex-col gap-1">
-                <span className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                  {item.title}
-                </span>
-                <span className="text-xs text-muted-foreground font-sans">
-                  {item.location}
-                </span>
+                <div className="p-4 flex flex-col gap-1">
+                  <span className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {item.title}
+                  </span>
+                  <span className="text-xs text-muted-foreground font-sans">
+                    {item.location}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </GSAPScrollReveal>
-      </Container>
-    </Section>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    </GSAPPageEmerge>
   );
 }

@@ -546,3 +546,73 @@ export function useGSAPPinnedStory(stepCount: number) {
 
   return containerRef;
 }
+
+/**
+ * Hook 8: Parallax Page Emerge
+ * Rises and fades the whole wrapped element — background and all — up into
+ * place as one sheet, scrubbed to scroll as its top travels from the bottom
+ * of the viewport to its resting spot. Wrap the full `<Section>` (not just
+ * its inner content) so the page itself, not only the text/photos sitting on
+ * it, is what visibly emerges. No `scale` at this level — the wrapped
+ * element is normally full-bleed, and scaling a full-width element exposes
+ * thin gaps of whatever sits behind it at its edges. Any child marked
+ * `data-emerge-deep` (e.g. a photo grid sitting under a heading) carries an
+ * extra offset on top of that motion, so it visibly lags a beat behind and
+ * catches up — real parallax depth (two rates), not a per-item stagger.
+ */
+export interface UseGSAPPageEmergeOptions {
+  start?: string;
+  end?: string;
+  distance?: number;
+  parallaxGap?: number;
+}
+
+export function useGSAPPageEmerge(options: UseGSAPPageEmergeOptions = {}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    start = "top bottom",
+    end = "top 35%",
+    distance = 140,
+    parallaxGap = 60,
+  } = options;
+
+  useGSAP(
+    () => {
+      if (!containerRef.current || isReducedMotion()) return;
+
+      const deep = containerRef.current.querySelectorAll<HTMLElement>("[data-emerge-deep]");
+      const container = containerRef.current;
+
+      // The whole panel — background included — rises and fades into place.
+      gsap.fromTo(
+        container,
+        { y: distance, opacity: 0.45 },
+        {
+          y: 0,
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: { trigger: container, start, end, scrub: true },
+        }
+      );
+
+      // The deeper layer rides its own extra offset on top of the panel's
+      // motion (nested transforms compose), so it visibly lags behind and
+      // catches up — the parallax cue — while still resolving in step with
+      // the panel by the time the scrub range ends.
+      if (deep.length > 0) {
+        gsap.fromTo(
+          deep,
+          { y: distance + parallaxGap },
+          {
+            y: 0,
+            ease: "none",
+            scrollTrigger: { trigger: container, start, end, scrub: true },
+          }
+        );
+      }
+    },
+    { scope: containerRef }
+  );
+
+  return containerRef;
+}

@@ -40,8 +40,8 @@ export function Navbar() {
         className={cn(
           "sticky top-0 z-40 w-full transition-all duration-300",
           isScrolled
-            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-2"
-            : "bg-background/80 backdrop-blur-sm py-3"
+            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-3"
+            : "bg-background/80 backdrop-blur-sm py-5"
         )}
       >
         <Container size="xl">

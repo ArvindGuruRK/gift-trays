@@ -8,11 +8,13 @@ import {
   useGSAPImageReveal,
   useGSAPParallax,
   useGSAPHorizontalScroll,
+  useGSAPPageEmerge,
   UseGSAPHeroOptions,
   UseGSAPScrollRevealOptions,
   UseGSAPTextRevealOptions,
   UseGSAPImageRevealOptions,
   UseGSAPParallaxOptions,
+  UseGSAPPageEmergeOptions,
 } from "@/lib/gsap/hooks";
 
 // ─── 1. GSAP HERO INTRO COMPONENT ───────────────────────────────────────────
@@ -181,5 +183,31 @@ export function GSAPHorizontalScroll({
         </div>
       </div>
     </div>
+  );
+}
+
+// ─── 7. GSAP PAGE EMERGE COMPONENT ─────────────────────────────────────────
+interface GSAPPageEmergeProps extends UseGSAPPageEmergeOptions {
+  children: ReactNode;
+  className?: string;
+  as?: keyof React.JSX.IntrinsicElements;
+}
+
+export function GSAPPageEmerge({
+  children,
+  className = "",
+  as: Component = "div",
+  start,
+  end,
+  distance,
+  parallaxGap,
+}: GSAPPageEmergeProps) {
+  const containerRef = useGSAPPageEmerge({ start, end, distance, parallaxGap });
+
+  return (
+    // @ts-ignore dynamic tag
+    <Component ref={containerRef} className={className}>
+      {children}
+    </Component>
   );
 }
