@@ -23,7 +23,7 @@ export interface UseGSAPHeroOptions {
 
 export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { delay = 0.1, onComplete, isSplashActive = false } = options;
+  const { delay = 0, onComplete, isSplashActive = false } = options;
 
   useGSAP(
     () => {
@@ -58,8 +58,18 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       if (bg) {
         tl.fromTo(
           bg,
-          { opacity: 0, scale: 1.08 },
-          { opacity: 1, scale: 1, duration: GSAP_TIMING.hero, ease: GSAP_EASE.luxury },
+          { opacity: 0, scale: 1.05 },
+          { opacity: 1, scale: 1, duration: 0.5, ease: GSAP_EASE.luxury },
+          0
+        );
+      }
+
+      // Main Heading entrance — starts immediately with no lag
+      if (heading) {
+        tl.fromTo(
+          heading,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.4, ease: GSAP_EASE.luxury },
           0
         );
       }
@@ -68,9 +78,9 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       if (logo) {
         tl.fromTo(
           logo,
-          { opacity: 0, y: -20, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: GSAP_TIMING.slow, ease: GSAP_EASE.luxury },
-          0.15
+          { opacity: 0, y: -15, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: GSAP_EASE.luxury },
+          0.04
         );
       }
 
@@ -78,19 +88,9 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: GSAP_TIMING.medium, ease: GSAP_EASE.luxury },
-          0.3
-        );
-      }
-
-      // Main Heading entrance
-      if (heading) {
-        tl.fromTo(
-          heading,
-          { opacity: 0, y: 35 },
-          { opacity: 1, y: 0, duration: GSAP_TIMING.slow, ease: GSAP_EASE.luxury },
-          0.45
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.35, ease: GSAP_EASE.luxury },
+          0.04
         );
       }
 
@@ -98,26 +98,26 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       if (description) {
         tl.fromTo(
           description,
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: GSAP_TIMING.medium, ease: GSAP_EASE.smooth },
-          0.65
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.38, ease: GSAP_EASE.smooth },
+          0.08
         );
       }
 
-      // CTAs staggered entrance
+      // CTAs staggered entrance — rapid follow-through
       if (ctas.length > 0) {
         tl.fromTo(
           ctas,
-          { opacity: 0, y: 20, scale: 0.98 },
+          { opacity: 0, y: 15, scale: 0.98 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: GSAP_TIMING.medium,
-            stagger: 0.12,
+            duration: 0.38,
+            stagger: 0.08,
             ease: GSAP_EASE.luxury,
           },
-          0.8
+          0.14
         );
       }
 
@@ -125,9 +125,9 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       if (motif) {
         tl.fromTo(
           motif,
-          { opacity: 0, scale: 0.8, rotate: -10 },
-          { opacity: 1, scale: 1, rotate: 0, duration: GSAP_TIMING.cinematic, ease: GSAP_EASE.luxury },
-          0.9
+          { opacity: 0, scale: 0.85, rotate: -5 },
+          { opacity: 1, scale: 1, rotate: 0, duration: 0.4, ease: GSAP_EASE.luxury },
+          0.18
         );
       }
     },
@@ -284,7 +284,7 @@ export interface UseGSAPImageRevealOptions {
 
 export function useGSAPImageReveal(options: UseGSAPImageRevealOptions = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { direction = "up", duration = GSAP_TIMING.cinematic, start = "top 80%", isSplashActive = false } = options;
+  const { direction = "up", duration = 0.5, start = "top 85%", isSplashActive = false } = options;
 
   useGSAP(
     () => {

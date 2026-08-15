@@ -171,11 +171,31 @@ export function SplashLoader({
   // There is deliberately no extra hold before this. The exit transition below
   // already overlaps the reveal, so an added delay is dead time the visitor just
   // waits through — it was the single largest contributor to this feeling sluggish.
+  // Notify the parent when splash dismissal begins (at fade-out onset) so underlying hero animations
+  // reveal seamlessly as the splash lifts, rather than sitting on a blank screen after dismissal.
   const hasCompleted = useRef(false);
   useEffect(() => {
-    if (showSplash || hasCompleted.current) return;
-    hasCompleted.current = true;
-    onComplete?.();
+    if (forceShow || hasCompleted.current) return;
+
+    // Trigger onComplete at the onset of the CSS lift-off fade
+    const fadeStartDelay = Math.max(0, minDuration - SPLASH_FADE_MS);
+
+    const timer = setTimeout(() => {
+      if (!hasCompleted.current) {
+        hasCompleted.current = true;
+        onComplete?.();
+      }
+    }, fadeStartDelay);
+
+    return () => clearTimeout(timer);
+  }, [forceShow, minDuration, onComplete]);
+
+  // Fallback safety in case showSplash turns false before timer
+  useEffect(() => {
+    if (!showSplash && !hasCompleted.current) {
+      hasCompleted.current = true;
+      onComplete?.();
+    }
   }, [showSplash, onComplete]);
 
   return (
