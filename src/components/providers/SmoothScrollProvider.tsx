@@ -9,6 +9,10 @@ import "lenis/dist/lenis.css";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+  // Viewport resizes on mobile (address bar show/hide while scrolling) fire
+  // a storm of resize events that would otherwise trigger a full recalculation
+  // mid-scroll — a common source of jank on phones.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
 interface SmoothScrollProviderProps {
@@ -41,8 +45,25 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
+    // Every ScrollTrigger start/end position is computed from the DOM's
+    // current layout at mount. Self-hosted webfonts still swap in a beat
+    // after first paint and images load in below the fold, both of which
+    // reflow the page and quietly invalidate those positions — the usual
+    // cause of reveals/pins feeling off (too early, too late, or clipped)
+    // right after a fresh reload. Re-measuring once things actually settle
+    // fixes that without touching any individual animation.
+    let cancelled = false;
+    const refresh = () => {
+      if (!cancelled) ScrollTrigger.refresh();
+    };
+
+    document.fonts?.ready?.then(refresh).catch(() => {});
+    window.addEventListener("load", refresh);
+
     return () => {
+      cancelled = true;
       gsap.ticker.remove(update);
+      window.removeEventListener("load", refresh);
     };
   }, []);
 

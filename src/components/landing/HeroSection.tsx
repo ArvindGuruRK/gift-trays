@@ -82,6 +82,7 @@ export function HeroSection({ onEnquireClick, isSplashActive, onHeroImageReady }
                           alt="WhatsApp Icon"
                           width={20}
                           height={20}
+                          loading="eager"
                           className="w-5 h-5 shrink-0"
                         />
                       }
@@ -108,7 +109,12 @@ export function HeroSection({ onEnquireClick, isSplashActive, onHeroImageReady }
                     alt="Seer Varisai Thattu Royal Arrangement"
                     width={800}
                     height={800}
-                    priority
+                    // The single true LCP candidate on the page — `preload` (not the
+                    // Next 16-deprecated `priority`) is the documented way to insert a
+                    // <link rel="preload"> for it. Every other landing image below uses
+                    // `loading="eager"` instead, per the docs' guidance against using
+                    // `preload` on more than one image at a time.
+                    preload
                     onLoad={onHeroImageReady}
                     onError={onHeroImageReady}
                     className="w-full h-auto object-contain transition-transform duration-700 ease-luxury hover:scale-105"

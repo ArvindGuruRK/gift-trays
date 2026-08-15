@@ -252,6 +252,10 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
                   alt={item.imageAlt}
                   aspectRatio="4/3"
                   className="group-hover:scale-105 transition-transform duration-500"
+                  // The "all" tab (default) mounts every gallery photo up front, so there's
+                  // no scroll-based reason to lazy-load them — preload the lot while the
+                  // splash screen is up instead of popping them in as the user scrolls.
+                  eager
                 />
                 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-card/90 text-primary flex items-center justify-center shadow-warm-md">

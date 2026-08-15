@@ -152,14 +152,24 @@ interface GSAPHorizontalScrollProps {
 }
 
 export function GSAPHorizontalScroll({ children, className = "" }: GSAPHorizontalScrollProps) {
+  // NOTE: this outer element is the GSAP pin trigger — it must not sit under
+  // an `overflow-hidden`/`overflow-scroll` ancestor, or the pin can misbehave
+  // (clip, jump, or fail to release cleanly). Clipping happens one level
+  // down instead, on the scroll wrapper below.
   const sectionRef = useGSAPHorizontalScroll();
 
   return (
-    <div ref={sectionRef} className={`relative w-full overflow-hidden ${className}`}>
-      <div className="w-full">
+    <div ref={sectionRef} className={`relative w-full ${className}`}>
+      {/*
+        Desktop/tablet (≥768px): GSAP pins the section above and drives this
+        track via transform, so it stays clipped + non-scrollable here.
+        Mobile (<768px): the pin never engages, so this becomes a plain
+        native horizontal swipe track with snap points instead.
+      */}
+      <div className="w-full overflow-x-auto md:overflow-hidden no-scrollbar overscroll-x-contain [-webkit-overflow-scrolling:touch]">
         <div
           data-horizontal-track
-          className="flex items-center gap-8 w-max px-6 sm:px-12 py-10 will-change-transform"
+          className="flex items-stretch gap-8 w-max px-6 sm:px-12 py-10 will-change-transform snap-x snap-mandatory md:snap-none"
         >
           {children}
         </div>

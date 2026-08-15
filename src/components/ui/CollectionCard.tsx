@@ -14,6 +14,8 @@ export interface CollectionCardProps {
   imageAlt: string;
   onClick?: () => void;
   className?: string;
+  /** Load immediately instead of waiting for scroll proximity — for images that should be preloaded up front (e.g. while a splash screen is up) rather than lazy-loaded on scroll. */
+  eager?: boolean;
 }
 
 export function CollectionCard({
@@ -24,6 +26,7 @@ export function CollectionCard({
   imageAlt,
   onClick,
   className,
+  eager = false,
 }: CollectionCardProps) {
   return (
     <motion.div
@@ -40,6 +43,7 @@ export function CollectionCard({
         src={imageUrl}
         alt={imageAlt}
         fill
+        loading={eager ? "eager" : "lazy"}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-cover transition-transform duration-700 ease-luxury group-hover:scale-108"
       />

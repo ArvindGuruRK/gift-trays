@@ -11,14 +11,11 @@ const LOADING_MESSAGES = [
   "Welcome to Seer Varisai Thattu",
 ];
 
-/** sessionStorage key used to ensure the full splash only plays once per browser session */
-const SPLASH_SESSION_KEY = "svt-splash-shown";
-
 /** Hard safety cap — never let a stalled/failed asset hold the splash forever. */
 const MAX_WAIT_MS = 8000;
 
 export interface SplashLoaderProps {
-  /** Forced visibility toggle — bypasses the once-per-session gate entirely (used for previews) */
+  /** Forced visibility toggle — keeps the splash on screen and skips auto-dismiss entirely (used for previews) */
   forceShow?: boolean;
   /** Minimum time the brand animation stays on screen, in ms (default 3500ms). Real dismissal also waits for `assetsReady`, whichever takes longer. */
   minDuration?: number;
@@ -40,37 +37,12 @@ export function SplashLoader({
   assetsReady,
   onComplete,
 }: SplashLoaderProps) {
-  // Starts false so SSR/first client render never paints the splash — avoids a flash
-  // for repeat visitors whose session already has it marked as shown.
-  const [showSplash, setShowSplash] = useState<boolean>(false);
+  // Plays on every mount — i.e. every full page load/refresh. No once-per-session gate:
+  // this is a deliberate brand moment the visitor should see each time, not just on first visit.
+  const [showSplash, setShowSplash] = useState<boolean>(true);
   const [messageIndex, setMessageIndex] = useState<number>(0);
   const [safetyElapsed, setSafetyElapsed] = useState<boolean>(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState<boolean>(false);
-
-  // Decide, once on mount, whether this session has already seen the splash.
-  useEffect(() => {
-    if (forceShow) {
-      setShowSplash(true);
-      return;
-    }
-
-    let alreadyShown = false;
-    try {
-      alreadyShown = sessionStorage.getItem(SPLASH_SESSION_KEY) === "1";
-      if (!alreadyShown) sessionStorage.setItem(SPLASH_SESSION_KEY, "1");
-    } catch {
-      // sessionStorage unavailable (e.g. private mode) — fall back to always showing.
-    }
-
-    if (alreadyShown) {
-      onComplete?.();
-      return;
-    }
-
-    setShowSplash(true);
-    // Only run once on mount — subsequent prop changes to onComplete shouldn't re-trigger this.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceShow]);
 
   // Safety cap — if something upstream is tracking real asset load state via `assetsReady`
   // and it never flips true (stalled network, failed request), never trap the visitor

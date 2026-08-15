@@ -11,7 +11,8 @@ export interface ImageFrameProps extends React.HTMLAttributes<HTMLDivElement> {
   aspectRatio?: "1/1" | "4/3" | "3/4" | "16/9" | "21/9";
   hasGoldFrame?: boolean;
   hoverZoom?: boolean;
-  priority?: boolean;
+  /** Load immediately instead of waiting for scroll proximity — for images that should be preloaded up front (e.g. while a splash screen is up) rather than lazy-loaded on scroll. */
+  eager?: boolean;
 }
 
 export function ImageFrame({
@@ -21,7 +22,7 @@ export function ImageFrame({
   aspectRatio = "4/3",
   hasGoldFrame = false,
   hoverZoom = true,
-  priority = false,
+  eager = false,
   ...props
 }: ImageFrameProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -67,7 +68,7 @@ export function ImageFrame({
             src={src}
             alt={alt}
             fill
-            priority={priority}
+            loading={eager ? "eager" : "lazy"}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}

@@ -369,9 +369,14 @@ export function useGSAPParallax(options: UseGSAPParallaxOptions = {}) {
 }
 
 /**
- * Hook 6: Horizontal Scroll Section
- * Converts vertical scrolling into horizontal translation for collections and galleries.
- * Uses smooth viewport scrub without forcing destructive DOM pin spacers inside cards.
+ * Hook 6: Horizontal Scroll Section (true scroll-jacking)
+ *
+ * Pins the section in the viewport and converts vertical scroll input into
+ * horizontal translation of the card track — the page itself stops advancing
+ * while the cards travel left-to-right, then releases back to normal vertical
+ * scroll the instant the track finishes. Only engages on wider (≥768px)
+ * viewports; below that, the caller renders a native `overflow-x-auto` swipe
+ * track instead, since pinned scroll-jacking is a poor fit for touch.
  */
 export function useGSAPHorizontalScroll() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -380,33 +385,59 @@ export function useGSAPHorizontalScroll() {
     () => {
       if (!sectionRef.current || isReducedMotion()) return;
 
-      const track = sectionRef.current.querySelector("[data-horizontal-track]") as HTMLElement;
+      const section = sectionRef.current;
+      const track = section.querySelector("[data-horizontal-track]") as HTMLElement;
       if (!track) return;
 
-      const getScrollAmount = () => {
-        const trackWidth = track.scrollWidth;
-        const containerWidth = sectionRef.current?.clientWidth || window.innerWidth;
-        const amount = trackWidth - containerWidth;
-        return amount > 0 ? -amount : 0;
-      };
+      const mm = gsap.matchMedia();
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 20%",
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-        },
+      mm.add("(min-width: 768px)", () => {
+        // Distance the track needs to travel so its last card lands flush
+        // with the right edge of the viewport.
+        const getDistance = () => {
+          const trackWidth = track.scrollWidth;
+          const viewportWidth = section.clientWidth;
+          return Math.max(trackWidth - viewportWidth, 0);
+        };
+
+        // Keep the pinned track clear of the sticky navbar instead of
+        // sliding underneath it.
+        const getNavOffset = () => {
+          const nav = document.querySelector("header");
+          return nav ? nav.getBoundingClientRect().height : 0;
+        };
+
+        const tween = gsap.to(track, {
+          x: () => -getDistance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: () => `top top+=${getNavOffset()}`,
+            // 1:1 pixel mapping — the horizontal travel takes exactly as
+            // long, in scroll distance, as the cards need to fully pass.
+            end: () => `+=${getDistance()}`,
+            pin: true,
+            pinSpacing: true,
+            // A touch of smoothing so the handoff feels buttery rather than
+            // rigidly locked to raw wheel deltas, without adding so much lag
+            // it feels disconnected from the input.
+            scrub: 0.5,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        };
       });
 
       // Ensure proper width calculations after images load
       const images = track.querySelectorAll("img");
       images.forEach((img) => {
         if (!img.complete) {
-          img.addEventListener("load", () => ScrollTrigger.refresh());
+          img.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
         }
       });
     },

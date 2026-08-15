@@ -152,6 +152,10 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
                   imageUrl={col.imageUrl}
                   imageAlt={col.imageAlt}
                   onClick={() => onSelectCollection?.(col)}
+                  // All 6 collection cards render on mount regardless of scroll position —
+                  // load them eagerly so they preload while the splash screen is up instead
+                  // of popping in lazily later.
+                  eager
                 />
               </motion.div>
             ))}
