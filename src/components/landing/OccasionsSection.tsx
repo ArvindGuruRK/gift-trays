@@ -5,10 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import { ImageFrame } from "@/components/ui/ImageFrame";
 import { GSAPTextReveal, GSAPScrollReveal } from "@/components/animations";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface OccasionsSectionProps {
   onSelectOccasion?: (occasionName: string) => void;
@@ -49,7 +47,7 @@ const OCCASIONS_LIST = [
   }
 ];
 
-export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps) {
+export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps = {}) {
   return (
     <Section theme="sand" padding="lg">
       <Container size="xl">
@@ -98,14 +96,6 @@ export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps) {
                 <span className="text-xs text-muted-foreground font-mono">
                   Customizable Items &amp; Colors
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onSelectOccasion?.(occ.title)}
-                  rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                >
-                  Configure This Occasion
-                </Button>
               </div>
             </div>
           ))}
