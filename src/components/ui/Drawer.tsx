@@ -29,14 +29,11 @@ export function Drawer({
   useEffect(() => {
     if (isOpen) {
       lenis?.stop();
-      document.body.style.overflow = "hidden";
     } else {
       lenis?.start();
-      document.body.style.overflow = "unset";
     }
     return () => {
       lenis?.start();
-      document.body.style.overflow = "unset";
     };
   }, [isOpen, lenis]);
 

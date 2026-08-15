@@ -4,6 +4,15 @@ import { cn } from "@/lib/utils";
 export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   theme?: "ivory" | "sand" | "maroon" | "white" | "pattern";
   padding?: "none" | "sm" | "md" | "lg" | "xl";
+  /**
+   * Sections clip their overflow by default so decorative motifs bleeding past
+   * the edge don't create a horizontal scrollbar.
+   *
+   * Set `"visible"` for any section containing a GSAP `pin`. Pinning inserts a
+   * pin-spacer and switches the target to fixed positioning; a clipped ancestor
+   * makes it jump, clip, or fail to release on the way back up.
+   */
+  overflow?: "hidden" | "visible";
   children: React.ReactNode;
 }
 
@@ -11,6 +20,7 @@ export function Section({
   className,
   theme = "ivory",
   padding = "lg",
+  overflow = "hidden",
   children,
   ...props
 }: SectionProps) {
@@ -34,6 +44,7 @@ export function Section({
     <section
       className={cn(
         "ui-section",
+        overflow === "visible" && "ui-section-overflow-visible",
         themeClasses[theme],
         paddingClasses[padding],
         className

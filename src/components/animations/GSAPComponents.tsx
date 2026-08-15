@@ -60,8 +60,12 @@ export function GSAPScrollReveal({
   });
 
   return (
+    // `data-gsap-reveal-type` lets globals.css paint the same "from" state GSAP
+    // is about to set. Without it the server-rendered markup paints fully
+    // visible, JS snaps it to opacity:0, and it re-animates — a visible flash on
+    // every section below the fold.
     // @ts-ignore dynamic tag
-    <Component ref={containerRef} className={className}>
+    <Component ref={containerRef} data-gsap-reveal-type={type} className={className}>
       {children}
     </Component>
   );
@@ -86,7 +90,7 @@ export function GSAPTextReveal({
 
   return (
     // @ts-ignore dynamic tag
-    <Component ref={textRef} className={className}>
+    <Component ref={textRef} data-gsap-text-reveal className={className}>
       {children}
     </Component>
   );
@@ -138,7 +142,10 @@ export function GSAPParallax({
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
-      <div ref={elementRef} className={`will-change-transform ${className}`}>
+      {/* will-change is applied by the hook while the scrub is actually active,
+          not permanently — a standing hint here keeps a compositor layer alive
+          for every parallax instance for the life of the page. */}
+      <div ref={elementRef} className={className}>
         {children}
       </div>
     </div>

@@ -116,6 +116,14 @@
 }
 
 /* Custom Base Styles & Lenis Integration */
+:root {
+  /* Single source of truth for the sticky header's height. The Navbar sizes
+     itself from this, and useGSAPHorizontalScroll reads it to offset its pin —
+     previously that offset was measured off the live <header>, whose height
+     changed as you scrolled. */
+  --nav-height: 4.5rem;
+}
+
 html, body {
   background-color: var(--background);
   color: var(--foreground);
@@ -246,6 +254,45 @@ html.lenis.lenis-smooth [data-lenis-prevent] {
   width: 100%;
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Opt-out for sections containing a GSAP pin. A pinned element is switched to
+   fixed positioning inside a generated pin-spacer, so any clipped ancestor
+   makes it jump, clip, or fail to release cleanly on the way back up. */
+.ui-section-overflow-visible {
+  overflow: visible;
+}
+
+/* ── Splash auto-lift ──────────────────────────────────────────────────────
+   The splash is server-rendered and painted within a few hundred milliseconds,
+   but React can only unmount it after the whole client page has hydrated —
+   well over a second on this page. Driving the dismissal from JS therefore made
+   "a 2 second splash" really mean "2 seconds, or hydration, whichever is later".
+
+   Handing the visual dismissal to CSS decouples the two: this starts ticking at
+   first paint, so the visitor sees the page at exactly --splash-delay no matter
+   what the main thread is doing. React unmounts the (by then invisible) element
+   whenever it catches up.
+
+   CSS animations sit above normal author declarations in the cascade, so this
+   also wins over the inline opacity Framer Motion writes onto the same node. */
+@keyframes ui-splash-lift {
+  to {
+    opacity: 0;
+    transform: scale(1.03);
+    visibility: hidden;
+  }
+}
+
+.ui-splash-lift {
+  animation: ui-splash-lift 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--splash-delay, 2000ms);
+}
+
+/* Once it has lifted it must not intercept clicks, even if React still has it
+   mounted. */
+.ui-splash-lift {
+  will-change: opacity, transform;
 }
 
 .ui-section-pad-none { padding-top: 0; padding-bottom: 0; }
@@ -623,26 +670,60 @@ input[type="checkbox"]:not(.sr-only) {
    plain CSS means the very first paint already matches GSAP's starting state,
    so there is only ever one smooth reveal, never a flash-then-hide-then-show.
    Gated on prefers-reduced-motion so those visitors — for whom the hooks
-   above deliberately never animate — still get the content immediately. */
+   above deliberately never animate — still get the content immediately.
+
+   Also scoped to `html.js`, set by an inline script in the root layout. If the
+   bundle never loads, none of this applies and the page stays readable rather
+   than permanently blank. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-hero-logo],
-  [data-hero-eyebrow],
-  [data-hero-heading],
-  [data-hero-description],
-  [data-hero-cta],
-  [data-hero-bg],
-  [data-hero-motif] {
+  html.js [data-hero-logo],
+  html.js [data-hero-eyebrow],
+  html.js [data-hero-heading],
+  html.js [data-hero-description],
+  html.js [data-hero-cta],
+  html.js [data-hero-bg],
+  html.js [data-hero-motif] {
     opacity: 0;
   }
 
-  [data-gsap-reveal="up"] { clip-path: inset(100% 0% 0% 0%); }
-  [data-gsap-reveal="down"] { clip-path: inset(0% 0% 100% 0%); }
-  [data-gsap-reveal="left"] { clip-path: inset(0% 0% 0% 100%); }
-  [data-gsap-reveal="right"] { clip-path: inset(0% 100% 0% 0%); }
-  [data-gsap-reveal="scale"] img,
-  [data-gsap-reveal="scale"] svg,
-  [data-gsap-reveal="scale"] canvas {
+  html.js [data-gsap-reveal="up"] { clip-path: inset(100% 0% 0% 0%); }
+  html.js [data-gsap-reveal="down"] { clip-path: inset(0% 0% 100% 0%); }
+  html.js [data-gsap-reveal="left"] { clip-path: inset(0% 0% 0% 100%); }
+  html.js [data-gsap-reveal="right"] { clip-path: inset(0% 100% 0% 0%); }
+  html.js [data-gsap-reveal="scale"] img,
+  html.js [data-gsap-reveal="scale"] svg,
+  html.js [data-gsap-reveal="scale"] canvas {
     opacity: 0;
+  }
+
+  /* Scroll-reveal + text-reveal targets. These were previously unguarded, which
+     is why every section below the fold flashed in, disappeared, then animated.
+     The transforms must mirror the `from` vars in lib/gsap/hooks.ts exactly. */
+  html.js [data-gsap-text-reveal],
+  html.js [data-gsap-text-reveal] [data-text-line] {
+    opacity: 0;
+  }
+
+  html.js [data-gsap-reveal-type] [data-gsap-item],
+  html.js [data-gsap-reveal-type][data-gsap-target] {
+    opacity: 0;
+  }
+
+  html.js [data-gsap-reveal-type="fadeUp"] [data-gsap-item],
+  html.js [data-gsap-reveal-type="fadeUp"][data-gsap-target] {
+    transform: translateY(40px);
+  }
+  html.js [data-gsap-reveal-type="scaleIn"] [data-gsap-item],
+  html.js [data-gsap-reveal-type="scaleIn"][data-gsap-target] {
+    transform: translateY(20px) scale(0.92);
+  }
+  html.js [data-gsap-reveal-type="slideRight"] [data-gsap-item],
+  html.js [data-gsap-reveal-type="slideRight"][data-gsap-target] {
+    transform: translateX(-50px);
+  }
+  html.js [data-gsap-reveal-type="slideLeft"] [data-gsap-item],
+  html.js [data-gsap-reveal-type="slideLeft"][data-gsap-target] {
+    transform: translateX(50px);
   }
 }
 

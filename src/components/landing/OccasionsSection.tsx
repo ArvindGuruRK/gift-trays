@@ -17,7 +17,6 @@ const OCCASIONS_LIST = [
     title: "Wedding Ceremonies (Kalyanam)",
     eyebrow: "The Grand Celebration",
     trays: "11 to 21 Trays Set",
-    image: "/gallery/photos/daisy-mandala-tray-spread.jpeg",
     desc: "The centerpiece of sacred wedding traditions. Exchanged between the bride and groom's families at the Kalyana Mandapam with ceremonial gestures of reverence.",
     highlights: ["Exotic fruit pyramids & dry fruit platters", "Pure ghee Mysore Pak & Laddus", "Silk saree & dhoti towel folding", "Decorated coconuts & brass lamps"]
   },
@@ -25,7 +24,6 @@ const OCCASIONS_LIST = [
     title: "Engagement (Nitchayathartham)",
     eyebrow: "The Promise of Union",
     trays: "7 to 11 Trays Set",
-    image: "/gallery/photos/pink-ribbon-daisy-mandala-spread-1.jpeg",
     desc: "Elegant Thamboolam arrangements celebrating the official engagement and sacred marital betrothal.",
     highlights: ["Special ring exchange platter", "Fresh betel leaves & decorated betel nuts", "Jasmine & lotus garlands", "Customized sweet gift boxes"]
   },
@@ -33,7 +31,6 @@ const OCCASIONS_LIST = [
     title: "Seemantham & Valaikappu",
     eyebrow: "Motherhood Blessings",
     trays: "5 to 9 Trays Set",
-    image: "/gallery/photos/white-chrysanthemum-leaf-mandala-closeup.jpeg",
     desc: "Warm ceremonial trays honoring expectant mothers with auspicious bangles, traditional sweets, and floral decor.",
     highlights: ["7 varieties of traditional sweets", "Glass bangles tray arrangement", "Lotus flower borders", "Silk sari presentation"]
   },
@@ -41,7 +38,6 @@ const OCCASIONS_LIST = [
     title: "Grahapravesam (Housewarming)",
     eyebrow: "Auspicious New Beginning",
     trays: "5 to 7 Trays Set",
-    image: "/gallery/photos/marigold-money-leaf-centerpiece-spread.jpeg",
     desc: "Sacred tray arrangements welcoming prosperity into your new home with kuthuvilakku lamps and fruit baskets.",
     highlights: ["Polished Kamatchi Amman lamp tray", "Banana flower & thamboolam set", "Fresh coconut arrangement", "Assorted fruit basket"]
   }

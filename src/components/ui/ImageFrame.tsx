@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ThattuIcon } from "./Motifs";
+import { getBlurDataURL } from "@/lib/blur-placeholders";
 
 export interface ImageFrameProps extends React.HTMLAttributes<HTMLDivElement> {
   src: string;
@@ -11,8 +12,15 @@ export interface ImageFrameProps extends React.HTMLAttributes<HTMLDivElement> {
   aspectRatio?: "1/1" | "4/3" | "3/4" | "16/9" | "21/9";
   hasGoldFrame?: boolean;
   hoverZoom?: boolean;
-  /** Load immediately instead of waiting for scroll proximity — for images that should be preloaded up front (e.g. while a splash screen is up) rather than lazy-loaded on scroll. */
+  /** Load immediately instead of waiting for scroll proximity. Use sparingly — only for images genuinely above the fold. */
   eager?: boolean;
+  /**
+   * Width this frame occupies at each breakpoint, for srcset selection.
+   * Defaults to a 3-column grid, which is what the gallery uses; pass an
+   * explicit value anywhere the layout differs or the browser will fetch a
+   * needlessly large derivative.
+   */
+  sizes?: string;
 }
 
 export function ImageFrame({
@@ -23,10 +31,12 @@ export function ImageFrame({
   hasGoldFrame = false,
   hoverZoom = true,
   eager = false,
+  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
   ...props
 }: ImageFrameProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const blurDataURL = getBlurDataURL(src);
 
   const aspectRatioClasses = {
     "1/1": "aspect-square",
@@ -48,10 +58,12 @@ export function ImageFrame({
     >
       {/* Inner container */}
       <div className="relative w-full h-full overflow-hidden rounded-md">
-        {/* Placeholder / Skeleton */}
-        {!isLoaded && !hasError && (
+        {/* Skeleton — only when there's no baked-in blur placeholder to show
+            instead. The pulse+bounce pair repaints continuously, so running it
+            behind every image in a 21-item grid is pure wasted main thread. */}
+        {!isLoaded && !hasError && !blurDataURL && (
           <div className="absolute inset-0 bg-secondary/50 animate-pulse flex items-center justify-center">
-            <ThattuIcon className="w-8 h-8 text-accent/40 animate-bounce" />
+            <ThattuIcon className="w-8 h-8 text-accent/40" />
           </div>
         )}
 
@@ -69,11 +81,14 @@ export function ImageFrame({
             alt={alt}
             fill
             loading={eager ? "eager" : "lazy"}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={sizes}
+            {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
             onLoad={() => setIsLoaded(true)}
             onError={() => setHasError(true)}
             className={cn(
-              "object-cover transition-all duration-700 ease-luxury",
+              // Only `opacity` and `transform` transition here — `transition-all`
+              // would also animate layout properties as classes swap.
+              "object-cover transition-[opacity,transform] duration-700 ease-luxury",
               isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105",
               hoverZoom && "group-hover:scale-105"
             )}

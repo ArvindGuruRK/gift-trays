@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface MotifProps extends React.SVGProps<SVGSVGElement> {
@@ -43,14 +44,22 @@ export function LotusMotif({ className, size = 32, ...props }: MotifProps) {
   );
 }
 
-/** Kolam Corner Flourish Motif - Authentic Realistic South Indian Sikku / Pulli Kolam */
+/**
+ * Kolam Corner Flourish Motif - Authentic Realistic South Indian Sikku / Pulli Kolam
+ *
+ * Purely decorative and rendered at up to 8 places on a single screen, so it goes
+ * through `next/image` (a raw `<img>` here would ship the full-resolution source
+ * to every one of them) and carries `alt=""` so screen readers skip the repeats.
+ */
 export function KolamCornerFlourish({ className, size = 120 }: { className?: string; size?: number }) {
   return (
-    <img
-      src="/motifs/kolam_corner_flourish.png"
-      alt="Traditional South Indian Kolam Corner Flourish"
+    <Image
+      src="/motifs/kolam_corner_flourish.webp"
+      alt=""
+      aria-hidden="true"
       width={size}
       height={size}
+      sizes={`${size}px`}
       className={cn("object-contain pointer-events-none drop-shadow-md", className)}
     />
   );

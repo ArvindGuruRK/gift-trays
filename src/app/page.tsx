@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SplashLoader } from "@/components/ui/SplashLoader";
-import { Modal } from "@/components/ui/Modal";
-import { Drawer } from "@/components/ui/Drawer";
-import { Toast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { RadioGroup } from "@/components/ui/RadioGroup";
-import { NumberSelector } from "@/components/ui/NumberSelector";
-import { CheckCircle, Send, MessageCircle, Sparkles } from "lucide-react";
+import { CheckCircle, Send } from "lucide-react";
 import { useLenis } from "lenis/react";
+import { refreshScrollTrigger } from "@/lib/gsap/config";
+
+// Neither is ever visible on first paint, so neither belongs in the initial
+// chunk — they load on demand the first time something opens them.
+const Modal = dynamic(() => import("@/components/ui/Modal").then((m) => m.Modal));
+const Toast = dynamic(() => import("@/components/ui/Toast").then((m) => m.Toast));
 
 import {
   HeroSection,
@@ -25,20 +25,48 @@ import {
   TestimonialsSection,
   InteractiveEnquirySection,
   FinalCTASection,
+  GALLERY_IMAGE_URLS,
+  COLLECTION_IMAGE_URLS,
 } from "@/components/landing";
+import { getImageProps } from "next/image";
+import { useImagePreloader, type PreloadEntry } from "@/lib/useImagePreloader";
+
+/**
+ * Photography warmed while the splash is on screen: the gallery grid plus the
+ * collection cards. These are the two image-heavy sections, and they're what the
+ * visitor scrolls to — so they should already be in cache by the time they do.
+ *
+ * Sized to match ImageFrame/CollectionCard's own `sizes`, otherwise the browser
+ * picks a different srcset candidate and none of this is reused.
+ */
+const PRELOAD_IMAGE_URLS = [...COLLECTION_IMAGE_URLS, ...GALLERY_IMAGE_URLS];
+const PRELOAD_SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
+
+/**
+ * Resolved through `getImageProps` so each preload asks for exactly the srcset
+ * candidate the real `<img>` will later request — preloading the raw `/public`
+ * path would download every photo a second time and hit the cache zero times.
+ *
+ * The hook decides *when* to issue these (after `window.load`); see its comments
+ * for why doing it earlier makes the whole page slower rather than faster.
+ */
+const PRELOAD_ENTRIES: PreloadEntry[] = PRELOAD_IMAGE_URLS.map((src) => {
+  const { props } = getImageProps({ src, alt: "", fill: true, sizes: PRELOAD_SIZES });
+  return { src, href: props.src, srcSet: props.srcSet, sizes: props.sizes };
+});
 
 export default function HomePage() {
   const lenis = useLenis();
 
   // Track active state of initial Splash Loader
   const [isSplashActive, setIsSplashActive] = useState<boolean>(true);
-  // Real load state of the hero visual — lets the splash wait on the actual image
-  // instead of a fixed timer, so it never dismisses onto a still-loading hero.
-  const [isHeroImageReady, setIsHeroImageReady] = useState<boolean>(false);
 
-  // Global Interactive Modal & Drawer State
+  // Warm the gallery + collection photography behind the splash, and report real
+  // progress into it rather than animating a decorative bar.
+  const preload = useImagePreloader(PRELOAD_ENTRIES);
+
+  // Global Interactive Modal State
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isToastOpen, setIsToastOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("Enquiry Submitted Successfully!");
 
@@ -47,9 +75,20 @@ export default function HomePage() {
   const [modalDescription, setModalDescription] = useState<string>(
     "Your enquiry details have been prepared. Our master plating team will review and respond within 2 hours."
   );
-  const [selectedTrays, setSelectedTrays] = useState<number>(11);
   const [selectedOccasion, setSelectedOccasion] = useState<string>("Wedding Seer Varisai");
   const [selectedPrice, setSelectedPrice] = useState<string>("₹26,400");
+
+  /**
+   * Every ScrollTrigger start/end position was computed while the splash overlay
+   * was covering the page and images were still settling in. Those measurements
+   * are stale the moment it leaves — which is exactly why reveals used to fire
+   * long after their section had already scrolled into view. Re-measure once,
+   * here, and they line up again.
+   */
+  const handleSplashComplete = useCallback(() => {
+    setIsSplashActive(false);
+    refreshScrollTrigger();
+  }, []);
 
   const scrollToEnquiry = () => {
     if (lenis) {
@@ -62,7 +101,6 @@ export default function HomePage() {
   const handleCollectionClick = (collection: any) => {
     setModalTitle(collection.title);
     setModalDescription(collection.description);
-    setSelectedTrays(11);
     setSelectedOccasion(collection.subtitle);
     setSelectedPrice("Custom Budget");
     setIsModalOpen(true);
@@ -80,22 +118,28 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
-      {/* Brand Animated Splash Loader — waits on the real hero image, not a guessed timer */}
+
+      {/* Brand splash — a flat 2 seconds, while the collection and first gallery
+          photos warm into cache behind it and the bar reports the real count.
+
+          Note there is no `assetsReady` here, deliberately. Gating dismissal on the
+          preload ties "how long is the brand moment" to "how fast is this visitor's
+          connection", which is precisely how this screen became a multi-second wait
+          before. Images that haven't arrived by the time it lifts simply keep
+          loading behind the page. */}
       <SplashLoader
-        onComplete={() => setIsSplashActive(false)}
-        minDuration={2600}
-        assetsReady={isHeroImageReady}
+        onComplete={handleSplashComplete}
+        minDuration={2000}
+        progress={preload.progress}
+        loadedCount={preload.loaded}
+        totalCount={preload.total}
       />
 
       {/* Main Navigation Bar */}
       <Navbar />
 
       {/* Section 1: Hero Section with GSAP Timeline Sequence (waits for splash completion) */}
-      <HeroSection
-        isSplashActive={isSplashActive}
-        onEnquireClick={scrollToEnquiry}
-        onHeroImageReady={() => setIsHeroImageReady(true)}
-      />
+      <HeroSection isSplashActive={isSplashActive} onEnquireClick={scrollToEnquiry} />
 
       {/* Section 2: Filterable Collections Portfolio */}
       <CollectionsSection onSelectCollection={handleCollectionClick} />
@@ -171,42 +215,6 @@ export default function HomePage() {
         message={toastMessage}
         type="success"
       />
-
-      {/* Global Slide-over Filter Drawer */}
-      <Drawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        title="Filter Seer Varisai Trays"
-        position="right"
-      >
-        <div className="flex flex-col gap-6 py-4">
-          <RadioGroup
-            name="globalDrawerOccasion"
-            label="Occasion Category"
-            selectedValue={selectedOccasion}
-            onChange={setSelectedOccasion}
-            layout="vertical"
-            options={[
-              { value: "wedding", label: "Wedding Seer (11-21 Trays)" },
-              { value: "engagement", label: "Engagement (7-11 Trays)" },
-              { value: "seemantham", label: "Seemantham (5-9 Trays)" },
-            ]}
-          />
-
-          <NumberSelector
-            label="Tray Quantity"
-            value={selectedTrays}
-            onChange={setSelectedTrays}
-            min={3}
-            max={31}
-            step={2}
-          />
-
-          <Button variant="primary" fullWidth onClick={() => setIsDrawerOpen(false)}>
-            Apply Filters
-          </Button>
-        </div>
-      </Drawer>
 
       {/* Global Footer */}
       <Footer />

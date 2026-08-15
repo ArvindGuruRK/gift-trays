@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getBlurDataURL } from "@/lib/blur-placeholders";
 
 export interface CollectionCardProps {
   title: string;
@@ -44,7 +45,13 @@ export function CollectionCard({
         alt={imageAlt}
         fill
         loading={eager ? "eager" : "lazy"}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        // Cards are a fixed 380px tall in a 3-up grid, so they never need a
+        // full-viewport-width derivative on desktop — the shared 33vw string
+        // this used to carry over-fetched at every breakpoint.
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+        {...(getBlurDataURL(imageUrl)
+          ? { placeholder: "blur" as const, blurDataURL: getBlurDataURL(imageUrl) }
+          : {})}
         className="object-cover transition-transform duration-700 ease-luxury group-hover:scale-108"
       />
 

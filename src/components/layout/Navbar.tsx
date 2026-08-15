@@ -26,26 +26,50 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let frame = 0;
+
+    // Lenis emits scroll events every frame, so this runs ~60x/sec. Reading
+    // scrollY is a layout-inducing read, and calling setState unconditionally
+    // re-rendered the whole header each time. Batch into one rAF and bail out
+    // unless the boolean actually flipped.
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const scrolled = window.scrollY > 20;
+        setIsScrolled((prev) => (prev === scrolled ? prev : scrolled));
+      });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
     <>
       <header
         className={cn(
-          "sticky top-0 z-40 w-full transition-all duration-300",
+          // Height is deliberately CONSTANT across scroll states. This used to
+          // toggle py-5 -> py-3 and add a border under `transition-all`, i.e. a
+          // 300ms layout animation on a sticky element — which also shifted the
+          // pin offset that the horizontal-scroll section measures against.
+          // Only colours and shadow change now, none of which trigger layout.
+          // Height is pinned to the --nav-height custom property so the GSAP
+          // horizontal-scroll pin can read the same value without measuring a
+          // live element (see useGSAPHorizontalScroll).
+          "sticky top-0 z-40 w-full h-(--nav-height) border-b",
+          "transition-[background-color,border-color,box-shadow] duration-300",
           isScrolled
-            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-3"
-            : "bg-background/80 backdrop-blur-sm py-5"
+            ? "bg-card/90 backdrop-blur-md border-border shadow-warm-sm"
+            : "bg-background/80 backdrop-blur-sm border-transparent"
         )}
       >
-        <Container size="xl">
-          <div className="relative flex items-center justify-between">
+        <Container size="xl" className="h-full">
+          <div className="relative flex items-center justify-between h-full">
             {/* Brand Logo */}
             <Link href="/" className="flex items-center gap-3 group z-10">
               <div className="w-10 h-10 rounded-full bg-primary/10 border border-accent/40 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">

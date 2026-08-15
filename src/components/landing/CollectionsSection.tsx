@@ -28,7 +28,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Royal Wedding Seer Varisai Sets",
     subtitle: "Ceremonial Wedding",
     itemCount: "11–21 Trays Set",
-    imageUrl: "/gallery/photos/wedding-seer-varisai-stage.jpeg",
+    imageUrl: "/gallery/photos/wedding-seer-varisai-stage.webp",
     imageAlt: "Wedding Seer Varisai Trays",
     description: "Complete traditional set with fruit pyramids, dry fruits, ghee sweets, decorated coconuts, silk towels, and brass lamps."
   },
@@ -38,7 +38,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Engagement Thamboolam Collection",
     subtitle: "Nitchayathartham",
     itemCount: "7–11 Trays Set",
-    imageUrl: "/gallery/photos/betel-leaf-peacock-rose-gift.jpeg",
+    imageUrl: "/gallery/photos/betel-leaf-peacock-rose-gift.webp",
     imageAlt: "Engagement Thamboolam Arrangements",
     description: "Betel leaves, supari, ring exchange platters, fresh jasmine garlands, and handcrafted gift hampers."
   },
@@ -48,7 +48,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Seemantham & Valaikappu Special",
     subtitle: "Traditional Baby Shower",
     itemCount: "5–9 Trays Set",
-    imageUrl: "/gallery/photos/white-chrysanthemum-leaf-mandala-hero.jpeg",
+    imageUrl: "/gallery/photos/white-chrysanthemum-leaf-mandala-hero.webp",
     imageAlt: "Seemantham Gift Trays",
     description: "7 varieties of traditional sweets, glass bangles tray arrangement, lotus decor, and sari presentation platter."
   },
@@ -58,7 +58,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Grahapravesam Auspicious Trays",
     subtitle: "Housewarming Ceremony",
     itemCount: "5–7 Trays Set",
-    imageUrl: "/gallery/photos/gold-tray-halwa-mandala-spread.jpeg",
+    imageUrl: "/gallery/photos/gold-tray-halwa-mandala-spread.webp",
     imageAlt: "Grahapravesam Trays",
     description: "Traditional Kamatchi Amman lamp tray, vilakku set, coconut thamboolam, and seasonal fruit baskets."
   },
@@ -68,7 +68,7 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Custom Designer Theme Sets",
     subtitle: "Bespoke Arrangements",
     itemCount: "Tailored Trays",
-    imageUrl: "/gallery/photos/rose-mandala-pineapple-tray-spread-1.jpeg",
+    imageUrl: "/gallery/photos/rose-mandala-pineapple-tray-spread-1.webp",
     imageAlt: "Custom Designer Trays",
     description: "Tailored to your specific color theme, flower preference, imported chocolates, or custom brass artifacts."
   },
@@ -78,11 +78,16 @@ const COLLECTIONS_DATA: CollectionItem[] = [
     title: "Heritage Silk & Saree Presentation",
     subtitle: "Kanchipuram Silk Special",
     itemCount: "3–5 Trays Set",
-    imageUrl: "/gallery/photos/wedding-mandapam-full-stage-spread.jpeg",
+    imageUrl: "/gallery/photos/wedding-mandapam-full-stage-spread.webp",
     imageAlt: "Silk Saree Presentation",
     description: "Elegant silk saree folding, dhoti set display, gold embroidered coconuts, and lotus floral borders."
   }
 ];
+
+/** Collection card images, exported for splash preloading (see GALLERY_IMAGE_URLS). */
+export const COLLECTION_IMAGE_URLS: readonly string[] = COLLECTIONS_DATA.map(
+  (item) => item.imageUrl
+);
 
 interface CollectionsSectionProps {
   onSelectCollection?: (collection: CollectionItem) => void;
@@ -132,13 +137,15 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
           ))}
         </div>
 
-        {/* Collections Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Collections Grid.
+            No `layout` prop on the grid or its children: FLIP layout animation
+            re-measures every card on each filter change, and the visual payoff
+            over a plain fade is small next to that cost. */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredCollections.map((col) => (
               <motion.div
                 key={col.id}
-                layout
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -152,15 +159,11 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
                   imageUrl={col.imageUrl}
                   imageAlt={col.imageAlt}
                   onClick={() => onSelectCollection?.(col)}
-                  // All 6 collection cards render on mount regardless of scroll position —
-                  // load them eagerly so they preload while the splash screen is up instead
-                  // of popping in lazily later.
-                  eager
                 />
               </motion.div>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </Container>
     </Section>
   );

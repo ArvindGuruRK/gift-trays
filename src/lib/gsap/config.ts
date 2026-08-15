@@ -43,6 +43,32 @@ export function isReducedMotion(): boolean {
 }
 
 /**
+ * Read a root-level CSS custom property as a pixel length.
+ *
+ * `getComputedStyle().getPropertyValue()` returns custom properties as their
+ * *specified* token — `"4.5rem"`, not `"72px"` — so a bare `parseFloat` on one
+ * silently yields 4.5. Resolve rem/em against the root font size instead.
+ */
+export function readCssLengthPx(property: string): number {
+  if (typeof window === "undefined") return 0;
+
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue(property)
+    .trim();
+  if (!raw) return 0;
+
+  const value = Number.parseFloat(raw);
+  if (Number.isNaN(value)) return 0;
+
+  if (raw.endsWith("rem") || raw.endsWith("em")) {
+    const rootSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    return value * rootSize;
+  }
+
+  return value;
+}
+
+/**
  * Force a ScrollTrigger update & refresh safely.
  */
 export function refreshScrollTrigger(): void {

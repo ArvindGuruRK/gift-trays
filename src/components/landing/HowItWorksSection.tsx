@@ -83,10 +83,16 @@ const PROCESS_STEPS = [
 
 export function HowItWorksSection() {
   return (
-    // No `overflow-hidden` here — this section is an ancestor of the GSAP
-    // pin trigger below, and clipping ancestors is a common cause of pinned
-    // ScrollTrigger sections jumping/failing to release cleanly.
-    <Section theme="sand" padding="md" className="border-y border-border/50">
+    // `overflow="visible"` is load-bearing: this section is an ancestor of the
+    // GSAP pin trigger below. `.ui-section` clips by default, and a clipping
+    // ancestor is a classic cause of pinned sections jumping and failing to
+    // release cleanly on the way back up.
+    <Section
+      theme="sand"
+      padding="md"
+      overflow="visible"
+      className="border-y border-border/50"
+    >
       <Container size="xl">
         <GSAPTextReveal as="div" className="text-center pt-6">
           <span className="text-eyebrow">Interactive Process</span>
@@ -97,8 +103,12 @@ export function HowItWorksSection() {
             Scroll down to translate through the 10 traditional steps that go into every custom tray order.
           </p>
         </GSAPTextReveal>
+      </Container>
 
-        <GSAPHorizontalScroll className="my-6">
+      {/* Deliberately a sibling of Container, not a child. The pin trigger must
+          not inherit a max-width — pinning switches it to fixed positioning, and
+          a width-constrained ancestor makes the track measure and land wrong. */}
+      <GSAPHorizontalScroll className="my-6">
           {PROCESS_STEPS.map((card, i) => (
             <div
               key={i}
@@ -128,8 +138,7 @@ export function HowItWorksSection() {
               </div>
             </div>
           ))}
-        </GSAPHorizontalScroll>
-      </Container>
+      </GSAPHorizontalScroll>
     </Section>
   );
 }

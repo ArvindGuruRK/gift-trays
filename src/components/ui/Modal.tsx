@@ -37,16 +37,13 @@ export function Modal({
 
     if (isOpen) {
       lenis?.stop();
-      document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
     } else {
       lenis?.start();
-      document.body.style.overflow = "unset";
     }
 
     return () => {
       lenis?.start();
-      document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose, lenis]);

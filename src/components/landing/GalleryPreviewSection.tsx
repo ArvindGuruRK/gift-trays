@@ -25,7 +25,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "15-Tray Fruit & Sweet Arrangement",
     location: "Grand Kalyana Mandapam, Royal Stage",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-1.jpeg",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-1.webp",
     imageAlt: "15-Tray Fruit & Sweet Arrangement"
   },
   {
@@ -33,7 +33,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "engagement",
     title: "Nitchayathartham Betel & Jasmine Set",
     location: "Heritage Betrothal Pavilion",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-2.jpeg",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-2.webp",
     imageAlt: "Nitchayathartham Betel & Jasmine Set"
   },
   {
@@ -41,7 +41,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "seemantham",
     title: "Seemantham Bangles & Lotus Tray",
     location: "Ceremonial Reception Stage",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-3.jpeg",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-3.webp",
     imageAlt: "Seemantham Bangles & Lotus Tray"
   },
   {
@@ -49,7 +49,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Imperial Brass Kuthuvilakku Lamp Platter",
     location: "Imperial Mandapam Shrine",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-4.jpeg",
+    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-4.webp",
     imageAlt: "Imperial Brass Kuthuvilakku Lamp Platter"
   },
   {
@@ -57,7 +57,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "housewarming",
     title: "Grahapravesam Banana Flower Thamboolam",
     location: "Auspicious Sacred Stage",
-    imageUrl: "/gallery/photos/pink-ribbon-daisy-mandala-spread-2.jpeg",
+    imageUrl: "/gallery/photos/pink-ribbon-daisy-mandala-spread-2.webp",
     imageAlt: "Grahapravesam Banana Flower Thamboolam"
   },
   {
@@ -65,7 +65,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "custom",
     title: "Lotus & Dry Fruit Pyramid Basket",
     location: "Destination Wedding Resort",
-    imageUrl: "/gallery/photos/daisy-mandala-grand-spread-2.jpeg",
+    imageUrl: "/gallery/photos/daisy-mandala-grand-spread-2.webp",
     imageAlt: "Lotus & Dry Fruit Pyramid Basket"
   },
   {
@@ -73,7 +73,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Assorted Fruit & Snack Tray Set",
     location: "Ceremonial Prep Table",
-    imageUrl: "/gallery/photos/assorted-fruit-snack-trays.jpeg",
+    imageUrl: "/gallery/photos/assorted-fruit-snack-trays.webp",
     imageAlt: "Assorted Fruit & Snack Tray Set"
   },
   {
@@ -81,7 +81,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "custom",
     title: "Eleven-Tray Fruit & Nut Assortment",
     location: "Custom Theme Setup",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-nut-closeup.jpeg",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-nut-closeup.webp",
     imageAlt: "Eleven-Tray Fruit & Nut Assortment"
   },
   {
@@ -89,7 +89,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "engagement",
     title: "Fruit & Sweets Tray Grid",
     location: "Engagement Ceremony Table",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-1.jpeg",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-1.webp",
     imageAlt: "Fruit & Sweets Tray Grid"
   },
   {
@@ -97,7 +97,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "seemantham",
     title: "Fruit & Sweets Tray Grid",
     location: "Seemantham Ceremony Table",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-2.jpeg",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-2.webp",
     imageAlt: "Fruit & Sweets Tray Grid"
   },
   {
@@ -105,7 +105,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "housewarming",
     title: "Fruit & Sweets Tray Grid",
     location: "Grahapravesam Table Setup",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-3.jpeg",
+    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-3.webp",
     imageAlt: "Fruit & Sweets Tray Grid"
   },
   {
@@ -113,7 +113,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Grand Mandala Fruit Arrangement",
     location: "Prep Kitchen Floor",
-    imageUrl: "/gallery/photos/grand-mandala-arrangement.jpeg",
+    imageUrl: "/gallery/photos/grand-mandala-arrangement.webp",
     imageAlt: "Grand Mandala Fruit Arrangement"
   },
   {
@@ -121,7 +121,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "custom",
     title: "Grand Assorted Tray Collection",
     location: "Staging Floor Layout",
-    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-1.jpeg",
+    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-1.webp",
     imageAlt: "Grand Assorted Tray Collection"
   },
   {
@@ -129,7 +129,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Grand Assorted Tray Collection",
     location: "Staging Floor Layout",
-    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-2.jpeg",
+    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-2.webp",
     imageAlt: "Grand Assorted Tray Collection"
   },
   {
@@ -137,7 +137,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "seemantham",
     title: "Green & Gold Dry Fruit Trays",
     location: "Ceremonial Tray Set",
-    imageUrl: "/gallery/photos/green-gold-dry-fruit-trays.jpeg",
+    imageUrl: "/gallery/photos/green-gold-dry-fruit-trays.webp",
     imageAlt: "Green & Gold Dry Fruit Trays"
   },
   {
@@ -145,7 +145,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "engagement",
     title: "Heart-Pattern Eight Tray Set",
     location: "Engagement Tray Display",
-    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-1.jpeg",
+    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-1.webp",
     imageAlt: "Heart-Pattern Eight Tray Set"
   },
   {
@@ -153,7 +153,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Heart-Pattern Eight Tray Set",
     location: "Wedding Tray Display",
-    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-2.jpeg",
+    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-2.webp",
     imageAlt: "Heart-Pattern Eight Tray Set"
   },
   {
@@ -161,7 +161,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "housewarming",
     title: "Kitchen Floor Tray Spread",
     location: "Prep Kitchen Floor",
-    imageUrl: "/gallery/photos/kitchen-floor-eleven-tray-spread.jpeg",
+    imageUrl: "/gallery/photos/kitchen-floor-eleven-tray-spread.webp",
     imageAlt: "Kitchen Floor Tray Spread"
   },
   {
@@ -169,7 +169,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "seemantham",
     title: "Laddu, Grape & Pistachio Tray Set",
     location: "Ceremonial Sweets Table",
-    imageUrl: "/gallery/photos/laddu-grape-pistachio-tray-set.jpeg",
+    imageUrl: "/gallery/photos/laddu-grape-pistachio-tray-set.webp",
     imageAlt: "Laddu, Grape & Pistachio Tray Set"
   },
   {
@@ -177,7 +177,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "wedding",
     title: "Grand Tray Spread",
     location: "Staging Floor Layout",
-    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-1.jpeg",
+    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-1.webp",
     imageAlt: "Grand Tray Spread"
   },
   {
@@ -185,10 +185,21 @@ const GALLERY_ITEMS: GalleryItem[] = [
     category: "custom",
     title: "Grand Tray Spread",
     location: "Staging Floor Layout",
-    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-2.jpeg",
+    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-2.webp",
     imageAlt: "Grand Tray Spread"
   }
 ];
+
+/**
+ * Every photo this section can display, in render order.
+ *
+ * Exported so the splash screen can preload exactly this set and report real
+ * progress against it — the gallery is by far the heaviest thing on the page,
+ * and it's what the visitor scrolls to expecting to be instant.
+ */
+export const GALLERY_IMAGE_URLS: readonly string[] = GALLERY_ITEMS.map(
+  (item) => item.imageUrl
+);
 
 interface GalleryPreviewSectionProps {
   onImageClick?: (item: GalleryItem) => void;
@@ -252,10 +263,9 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
                   alt={item.imageAlt}
                   aspectRatio="4/3"
                   className="group-hover:scale-105 transition-transform duration-500"
-                  // The "all" tab (default) mounts every gallery photo up front, so there's
-                  // no scroll-based reason to lazy-load them — preload the lot while the
-                  // splash screen is up instead of popping them in as the user scrolls.
-                  eager
+                  // Deliberately lazy. This section sits ~7 screens down, so eager-loading
+                  // all 21 photos just saturates the connection during first paint and
+                  // starves the hero — the blur placeholder covers the gap on scroll.
                 />
                 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-10 h-10 rounded-full bg-card/90 text-primary flex items-center justify-center shadow-warm-md">

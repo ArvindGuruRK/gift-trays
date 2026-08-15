@@ -16,13 +16,11 @@ import { Sparkles } from "lucide-react";
 interface HeroSectionProps {
   onEnquireClick?: () => void;
   isSplashActive?: boolean;
-  /** Fires once the real hero image has finished loading (or failed) — lets the splash wait on it for real. */
-  onHeroImageReady?: () => void;
 }
 
-export function HeroSection({ onEnquireClick, isSplashActive, onHeroImageReady }: HeroSectionProps) {
+export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps) {
   return (
-    <Section theme="maroon" padding="xl" className="relative overflow-hidden min-h-[85vh] flex items-center">
+    <Section theme="maroon" padding="xl" className="relative overflow-hidden min-h-[85svh] flex items-center">
       {/* Top-Right & Bottom-Left Corner Kolam Flourishes */}
       <KolamCornerFlourish
         size={240}
@@ -105,18 +103,16 @@ export function HeroSection({ onEnquireClick, isSplashActive, onHeroImageReady }
                   className="w-full flex items-center justify-center scale-110 sm:scale-120 lg:scale-[1.28] transform-gpu origin-center"
                 >
                   <Image
-                    src="/gallery/asserts/Ceremonial_trays_round.png"
+                    src="/gallery/hero-tray-round.webp"
                     alt="Seer Varisai Thattu Royal Arrangement"
-                    width={800}
-                    height={800}
+                    width={1600}
+                    height={894}
                     // The single true LCP candidate on the page — `preload` (not the
                     // Next 16-deprecated `priority`) is the documented way to insert a
-                    // <link rel="preload"> for it. Every other landing image below uses
-                    // `loading="eager"` instead, per the docs' guidance against using
-                    // `preload` on more than one image at a time.
+                    // <link rel="preload"> for it. It must stay the ONLY preloaded
+                    // image; everything else on the page is lazy.
                     preload
-                    onLoad={onHeroImageReady}
-                    onError={onHeroImageReady}
+                    sizes="(max-width: 1024px) 90vw, 640px"
                     className="w-full h-auto object-contain transition-transform duration-700 ease-luxury hover:scale-105"
                   />
                 </GSAPImageReveal>

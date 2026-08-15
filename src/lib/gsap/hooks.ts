@@ -2,7 +2,14 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger, GSAP_EASE, GSAP_TIMING, isReducedMotion } from "./config";
+import {
+  gsap,
+  ScrollTrigger,
+  GSAP_EASE,
+  GSAP_TIMING,
+  isReducedMotion,
+  readCssLengthPx,
+} from "./config";
 
 /**
  * Hook 1: Hero Animation Sequence
@@ -30,8 +37,11 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
       const bg = containerRef.current.querySelector("[data-hero-bg]");
       const motif = containerRef.current.querySelector("[data-hero-motif]");
 
-      // Refresh ScrollTrigger calculations cleanly
-      ScrollTrigger.refresh();
+      // NOTE: deliberately no ScrollTrigger.refresh() here. It re-measures every
+      // trigger on the page from inside one component's hook, and re-fires on the
+      // isSplashActive dependency below — so it landed twice, mid-splash-fade,
+      // fighting the provider's own refresh. Refreshing is the provider's job
+      // (SmoothScrollProvider) plus one call when the splash completes.
 
       const tl = gsap.timeline({
         delay,
@@ -40,6 +50,7 @@ export function useGSAPHeroSequence(options: UseGSAPHeroOptions = {}) {
           trigger: containerRef.current,
           start: "top 85%",
           toggleActions: "play none none none",
+          once: true,
         },
       });
 
@@ -146,6 +157,7 @@ export function useGSAPScrollReveal(options: UseGSAPScrollRevealOptions = {}) {
   const {
     type = "fadeUp",
     start = "top 78%",
+    end,
     duration = GSAP_TIMING.slow,
     delay = 0,
     stagger = 0,
@@ -189,8 +201,18 @@ export function useGSAPScrollReveal(options: UseGSAPScrollRevealOptions = {}) {
         scrollTrigger: {
           trigger: containerRef.current,
           start,
+          end,
           toggleActions: scrub ? undefined : once ? "play none none none" : "play reverse play reverse",
           scrub,
+          // Self-destruct after firing. `toggleActions: "play none none none"`
+          // alone left every one of these ~20 triggers registered for the life of
+          // the page, re-measuring on every refresh for an animation that can
+          // never run again.
+          once: scrub ? undefined : once,
+          // Don't leave a reveal stranded half-played when the user flicks past
+          // it faster than the trigger's own resolution.
+          fastScrollEnd: true,
+          invalidateOnRefresh: true,
         },
       });
     },
@@ -231,10 +253,14 @@ export function useGSAPTextReveal(options: UseGSAPTextRevealOptions = {}) {
           duration,
           stagger,
           ease: GSAP_EASE.luxury,
+          willChange: "clip-path, transform",
+          onComplete: () => gsap.set(targets, { willChange: "auto" }),
           scrollTrigger: {
             trigger: textRef.current,
             start,
             toggleActions: "play none none none",
+            once: true,
+            fastScrollEnd: true,
           },
         }
       );
@@ -268,7 +294,7 @@ export function useGSAPImageReveal(options: UseGSAPImageRevealOptions = {}) {
       const mask = containerRef.current;
 
       let clipStart = "inset(100% 0% 0% 0%)";
-      let clipEnd = "inset(0% 0% 0% 0%)";
+      const clipEnd = "inset(0% 0% 0% 0%)";
 
       if (direction === "down") {
         clipStart = "inset(0% 0% 100% 0%)";
@@ -291,32 +317,37 @@ export function useGSAPImageReveal(options: UseGSAPImageRevealOptions = {}) {
               trigger: mask,
               start,
               toggleActions: "play none none none",
+              once: true,
             },
           }
         );
       } else {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: mask,
-            start,
-            toggleActions: "play none none none",
-          },
-        });
-
-        tl.fromTo(
+        // Curtain reveal via clip-path only.
+        //
+        // This used to also tween `scale` on the inner <img> across the same
+        // window. Scaling a large image forces the browser to re-raster it every
+        // frame, and doing that *while* its clip region is also changing is the
+        // most expensive combination available here — on the hero, over a
+        // full-bleed photo. The clip alone reads virtually identically.
+        gsap.fromTo(
           mask,
           { clipPath: clipStart },
-          { clipPath: clipEnd, duration, ease: GSAP_EASE.luxury }
+          {
+            clipPath: clipEnd,
+            duration,
+            ease: GSAP_EASE.luxury,
+            // Hint the compositor for the duration only — a permanent
+            // will-change would hold the layer alive for the whole page.
+            willChange: "clip-path",
+            onComplete: () => gsap.set(mask, { willChange: "auto" }),
+            scrollTrigger: {
+              trigger: mask,
+              start,
+              toggleActions: "play none none none",
+              once: true,
+            },
+          }
         );
-
-        if (img !== mask) {
-          tl.fromTo(
-            img,
-            { scale: 1.1 },
-            { scale: 1, duration: duration * 1.1, ease: GSAP_EASE.luxury },
-            0
-          );
-        }
       }
     },
     { scope: containerRef, dependencies: [isSplashActive] }
@@ -356,8 +387,17 @@ export function useGSAPParallax(options: UseGSAPParallaxOptions = {}) {
             trigger: triggerElement,
             start,
             end,
-            scrub: true,
+            // A little smoothing rather than binding rigidly to raw scroll
+            // deltas — with Lenis driving updates, `scrub: true` reads as
+            // twitchy on trackpads.
+            scrub: 0.5,
             invalidateOnRefresh: true,
+            // Promote only while this element is actually within its scrub
+            // window, then release the layer again.
+            onToggle: (self) =>
+              gsap.set(elementRef.current, {
+                willChange: self.isActive ? "transform" : "auto",
+              }),
           },
         }
       );
@@ -400,12 +440,14 @@ export function useGSAPHorizontalScroll() {
           return Math.max(trackWidth - viewportWidth, 0);
         };
 
-        // Keep the pinned track clear of the sticky navbar instead of
-        // sliding underneath it.
-        const getNavOffset = () => {
-          const nav = document.querySelector("header");
-          return nav ? nav.getBoundingClientRect().height : 0;
-        };
+        // Keep the pinned track clear of the sticky navbar instead of sliding
+        // underneath it.
+        //
+        // Read from a CSS variable rather than measuring the live <header>:
+        // the header used to change height as you scrolled, so measuring it
+        // meant the pin's start position depended on a moving target and only
+        // re-derived on refresh.
+        const getNavOffset = () => readCssLengthPx("--nav-height");
 
         const tween = gsap.to(track, {
           x: () => -getDistance(),
@@ -433,69 +475,34 @@ export function useGSAPHorizontalScroll() {
         };
       });
 
-      // Ensure proper width calculations after images load
-      const images = track.querySelectorAll("img");
+      // Late-loading images inside the track change its scrollWidth, which the
+      // pin distance depends on. Coalesce every such load into ONE refresh on
+      // the next frame — the previous version fired a full global refresh per
+      // image, and those listeners outlived gsap.context().revert().
+      const images = Array.from(track.querySelectorAll("img")).filter((img) => !img.complete);
+      if (images.length === 0) return;
+
+      let frame = 0;
+      const onImageLoad = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+      };
+
       images.forEach((img) => {
-        if (!img.complete) {
-          img.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
-        }
+        img.addEventListener("load", onImageLoad);
+        img.addEventListener("error", onImageLoad);
       });
+
+      return () => {
+        cancelAnimationFrame(frame);
+        images.forEach((img) => {
+          img.removeEventListener("load", onImageLoad);
+          img.removeEventListener("error", onImageLoad);
+        });
+      };
     },
     { scope: sectionRef }
   );
 
   return sectionRef;
-}
-
-/**
- * Hook 7: Pinned Storytelling Section
- * Pins container and steps through storytelling cards during vertical scroll.
- */
-export interface PinnedStoryStep {
-  id: string;
-  title: string;
-}
-
-export function useGSAPPinnedStory(stepCount: number) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const activeStepRef = useRef<number>(0);
-
-  useGSAP(
-    () => {
-      if (!containerRef.current || isReducedMotion()) return;
-
-      const cards = containerRef.current.querySelectorAll("[data-story-step]");
-      if (cards.length === 0) return;
-
-      cards.forEach((card, index) => {
-        if (index === 0) return; // First step is visible initially
-
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: () => `top+=${index * 400} top`,
-          end: () => `top+=${(index + 1) * 400} top`,
-          onEnter: () => {
-            activeStepRef.current = index;
-            gsap.to(card, { opacity: 1, y: 0, duration: 0.5, ease: GSAP_EASE.luxury });
-          },
-          onLeaveBack: () => {
-            activeStepRef.current = index - 1;
-            gsap.to(card, { opacity: 0, y: 30, duration: 0.4, ease: GSAP_EASE.smooth });
-          },
-        });
-      });
-
-      // Pin main container for full duration of steps
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: () => `+=${stepCount * 400}`,
-        pin: true,
-        pinSpacing: true,
-      });
-    },
-    { scope: containerRef }
-  );
-
-  return containerRef;
 }
