@@ -87,7 +87,7 @@ export default function HomePage() {
       <HeroSection isSplashActive={isSplashActive} onEnquireClick={scrollToEnquiry} />
 
       {/* Section 2: Filterable Collections Portfolio */}
-      <CollectionsSection onSelectCollection={handleCollectionClick} />
+      <CollectionsSection isSplashActive={isSplashActive} onSelectCollection={handleCollectionClick} />
 
       {/* Section 3: Brand Heritage & Story */}
       <BrandIntroSection />

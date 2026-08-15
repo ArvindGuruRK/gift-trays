@@ -148,14 +148,31 @@ export function GSAPParallax({
 interface GSAPHorizontalScrollProps {
   children: ReactNode;
   className?: string;
+  pin?: boolean;
+  start?: string;
+  speed?: number;
+  holdRatio?: number;
 }
 
-export function GSAPHorizontalScroll({ children, className = "" }: GSAPHorizontalScrollProps) {
-  const sectionRef = useGSAPHorizontalScroll();
+export function GSAPHorizontalScroll({
+  children,
+  className = "",
+  pin = true,
+  start = "top top",
+  speed = 1,
+  holdRatio = 0.08,
+}: GSAPHorizontalScrollProps) {
+  const sectionRef = useGSAPHorizontalScroll({ pin, start, speed, holdRatio });
 
   return (
-    <div ref={sectionRef} className={`relative w-full overflow-hidden ${className}`}>
-      <div className="w-full">
+    <div
+      ref={sectionRef}
+      // svh, not vh: the mobile URL bar must not push pinned content off screen.
+      className={`relative w-full overflow-hidden ${pin ? "h-svh flex items-center" : ""} ${className}`}
+    >
+      {/* This wrapper clips the track, so its width is what the hook measures
+          against to work out how far the track has to travel. */}
+      <div className="w-full overflow-hidden">
         <div
           data-horizontal-track
           className="flex items-center gap-8 w-max px-6 sm:px-12 py-10 will-change-transform"

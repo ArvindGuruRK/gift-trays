@@ -5,8 +5,9 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Badge } from "@/components/ui/Badge";
-import { GSAPTextReveal, GSAPScrollReveal } from "@/components/animations";
 import { CheckCircle2 } from "lucide-react";
+import { motion } from "motion/react";
+import { fadeUp, staggerContainer, staggerItem } from "@/lib/animations";
 
 interface OccasionsSectionProps {
   onSelectOccasion?: (occasionName: string) => void;
@@ -51,7 +52,13 @@ export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps = {
   return (
     <Section theme="sand" padding="lg">
       <Container size="xl">
-        <GSAPTextReveal as="div">
+        {/* Motion Variant 1: Fade Up Entrance */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
+        >
           <Heading
             eyebrow="Occasions We Serve"
             title="Ceremonial Trays for Every Milestone"
@@ -59,11 +66,23 @@ export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps = {
             align="center"
             hasDivider
           />
-        </GSAPTextReveal>
+        </motion.div>
 
-        <GSAPScrollReveal type="fadeUp" stagger={0.15} start="top 85%" className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+        {/* Motion Variant 2: Staggered Grid Reveal */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10"
+        >
           {OCCASIONS_LIST.map((occ, idx) => (
-            <div data-gsap-item key={idx} className="p-8 rounded-2xl bg-card border border-border shadow-warm-md flex flex-col justify-between gap-6 hover:border-accent/40 transition-all">
+            <motion.div
+              key={idx}
+              variants={staggerItem}
+              onClick={() => onSelectOccasion?.(occ.title)}
+              className="p-8 rounded-2xl bg-card border border-border shadow-warm-md flex flex-col justify-between gap-6 hover:border-accent/40 transition-all cursor-pointer group"
+            >
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase text-accent font-sans tracking-wider">
@@ -74,7 +93,7 @@ export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps = {
                   </Badge>
                 </div>
 
-                <h3 className="text-h3 font-serif font-medium text-foreground">
+                <h3 className="text-h3 font-serif font-medium text-foreground group-hover:text-primary transition-colors">
                   {occ.title}
                 </h3>
 
@@ -96,11 +115,15 @@ export function OccasionsSection({ onSelectOccasion }: OccasionsSectionProps = {
                 <span className="text-xs text-muted-foreground font-mono">
                   Customizable Items &amp; Colors
                 </span>
+                <span className="text-xs font-semibold text-primary group-hover:translate-x-1 transition-transform">
+                  Configure Occasion →
+                </span>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </GSAPScrollReveal>
+        </motion.div>
       </Container>
     </Section>
   );
 }
+

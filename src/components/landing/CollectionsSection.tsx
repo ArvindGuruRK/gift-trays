@@ -6,7 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { CollectionCard } from "@/components/ui/CollectionCard";
 import { Badge } from "@/components/ui/Badge";
-import { GSAPTextReveal, GSAPScrollReveal } from "@/components/animations";
+import { GSAPTextReveal, GSAPScrollReveal, GSAPImageReveal } from "@/components/animations";
 import { motion, AnimatePresence } from "motion/react";
 import { fadeUp } from "@/lib/animations";
 
@@ -86,9 +86,10 @@ const COLLECTIONS_DATA: CollectionItem[] = [
 
 interface CollectionsSectionProps {
   onSelectCollection?: (collection: CollectionItem) => void;
+  isSplashActive?: boolean;
 }
 
-export function CollectionsSection({ onSelectCollection }: CollectionsSectionProps) {
+export function CollectionsSection({ onSelectCollection, isSplashActive }: CollectionsSectionProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const filteredCollections = activeCategory === "all"
@@ -132,7 +133,7 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
           ))}
         </div>
 
-        {/* Collections Grid */}
+        {/* Collections Grid with GSAP Image Curtain Mask Reveal */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredCollections.map((col) => (
@@ -145,14 +146,16 @@ export function CollectionsSection({ onSelectCollection }: CollectionsSectionPro
                 exit="hidden"
                 transition={{ duration: 0.3 }}
               >
-                <CollectionCard
-                  title={col.title}
-                  subtitle={col.subtitle}
-                  itemCount={col.itemCount}
-                  imageUrl={col.imageUrl}
-                  imageAlt={col.imageAlt}
-                  onClick={() => onSelectCollection?.(col)}
-                />
+                <GSAPImageReveal direction="up" start="top 85%" isSplashActive={isSplashActive}>
+                  <CollectionCard
+                    title={col.title}
+                    subtitle={col.subtitle}
+                    itemCount={col.itemCount}
+                    imageUrl={col.imageUrl}
+                    imageAlt={col.imageAlt}
+                    onClick={() => onSelectCollection?.(col)}
+                  />
+                </GSAPImageReveal>
               </motion.div>
             ))}
           </AnimatePresence>

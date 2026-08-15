@@ -163,7 +163,7 @@ export function useGSAPScrollReveal(options: UseGSAPScrollRevealOptions = {}) {
 
       const targets = children.length > 0 ? children : [containerRef.current];
 
-      let initialProps: gsap.TweenVars = { opacity: 0, y: 40 };
+      let initialProps: gsap.TweenVars = { opacity: 0, y: 24 };
       let animateProps: gsap.TweenVars = { opacity: 1, y: 0 };
 
       if (type === "fadeIn") {
@@ -369,52 +369,130 @@ export function useGSAPParallax(options: UseGSAPParallaxOptions = {}) {
 }
 
 /**
- * Hook 6: Horizontal Scroll Section
- * Converts vertical scrolling into horizontal translation for collections and galleries.
- * Uses smooth viewport scrub without forcing destructive DOM pin spacers inside cards.
+ * Hook 6: Horizontal Scroll Section with Pinning
+ * Converts vertical scrolling into horizontal translation for process cards, collections, and galleries.
+ * Pins the container until horizontal scroll completes.
  */
-export function useGSAPHorizontalScroll() {
+export interface UseGSAPHorizontalScrollOptions {
+  pin?: boolean;
+  start?: string;
+  /**
+   * Keep this `true`. Lenis already smooths the scroll position, so a numeric
+   * scrub layers a second lag on top and lets the pin release while the track
+   * is still catching up — which strands the last cards off-screen.
+   */
+  scrub?: number | boolean;
+  /** Vertical scroll spent per pixel of horizontal travel. 1 = 1:1, higher = slower. */
+  speed?: number;
+  /** Fraction of the pinned scroll spent parked on the final card before releasing. */
+  holdRatio?: number;
+}
+
+export function useGSAPHorizontalScroll(options: UseGSAPHorizontalScrollOptions = {}) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { pin = true, start = "top top", scrub = true, speed = 1, holdRatio = 0.08 } = options;
 
   useGSAP(
     () => {
-      if (!sectionRef.current || isReducedMotion()) return;
+      const section = sectionRef.current;
+      if (!section) return;
 
-      const track = sectionRef.current.querySelector("[data-horizontal-track]") as HTMLElement;
+      const track = section.querySelector<HTMLElement>("[data-horizontal-track]");
       if (!track) return;
 
-      const getScrollAmount = () => {
-        const trackWidth = track.scrollWidth;
-        const containerWidth = sectionRef.current?.clientWidth || window.innerWidth;
-        const amount = trackWidth - containerWidth;
-        return amount > 0 ? -amount : 0;
-      };
+      const progressFill = section.querySelector<HTMLElement>("[data-horizontal-progress]");
+      const stepIndicator = section.querySelector<HTMLElement>("[data-horizontal-step]");
+      const totalCards = track.children.length;
+      if (totalCards === 0) return;
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: "none",
+      const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+
+      // The track's direct parent is what clips it, so its width is how much of
+      // the track is on screen at once.
+      const viewport = (track.parentElement ?? section) as HTMLElement;
+
+      // Reduced motion: no pinning, no scroll-jacking. Hand the track back to
+      // the user as an ordinary swipeable strip so every card stays reachable.
+      if (isReducedMotion()) {
+        gsap.set(track, { x: 0 });
+        viewport.style.overflowX = "auto";
+        if (progressFill) gsap.set(progressFill, { scaleX: 1, transformOrigin: "left center" });
+        if (stepIndicator) stepIndicator.textContent = `${pad(totalCards)} / ${pad(totalCards)}`;
+        return () => {
+          viewport.style.overflowX = "";
+        };
+      }
+
+      // `offsetWidth` of the `w-max` track is its full untransformed content
+      // width (cards + gaps + padding), so it stays correct both while the track
+      // is translated and while the section is pinned. Ending here parks the
+      // track's right edge on the viewport's right edge, leaving the last card
+      // inset by the track's own right padding.
+      const getDistance = () => Math.max(0, track.offsetWidth - viewport.clientWidth);
+
+      const hold = Math.min(Math.max(holdRatio, 0), 0.4);
+      const setFill = progressFill ? gsap.quickSetter(progressFill, "scaleX") : null;
+
+      if (progressFill) gsap.set(progressFill, { scaleX: 0, transformOrigin: "left center" });
+
+      let lastStep = -1;
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 20%",
-          scrub: 0.8,
+          trigger: section,
+          pin,
+          pinSpacing: pin,
+          start,
+          // The hold tail is part of the pinned range, so divide it back out to
+          // keep the actual card travel at the requested `speed`.
+          end: () => `+=${Math.max(1, Math.round((getDistance() * speed) / (1 - hold)))}`,
+          scrub,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Rescale past the trailing hold so the readouts land on 100% and
+            // 10/10 exactly when the last card settles, not after the pause.
+            const p = Math.min(1, self.progress / (1 - hold));
+            setFill?.(p);
+
+            if (stepIndicator) {
+              const step = Math.min(totalCards, Math.round(p * (totalCards - 1)) + 1);
+              if (step !== lastStep) {
+                lastStep = step;
+                stepIndicator.textContent = `${pad(step)} / ${pad(totalCards)}`;
+              }
+            }
+          },
         },
       });
 
-      // Ensure proper width calculations after images load
-      const images = track.querySelectorAll("img");
-      images.forEach((img) => {
-        if (!img.complete) {
-          img.addEventListener("load", () => ScrollTrigger.refresh());
-        }
-      });
+      tl.fromTo(track, { x: 0 }, { x: () => -getDistance(), duration: 1 - hold });
+      if (hold > 0) tl.to({}, { duration: hold });
+
+      // Card widths shift once webfonts swap in; re-measure when they settle.
+      // Window resizes are already handled by ScrollTrigger itself.
+      let cancelled = false;
+      const refresh = () => {
+        if (!cancelled) ScrollTrigger.refresh();
+      };
+      document.fonts?.ready.then(refresh);
+
+      const images = Array.from(track.querySelectorAll("img")).filter((img) => !img.complete);
+      images.forEach((img) => img.addEventListener("load", refresh));
+
+      return () => {
+        cancelled = true;
+        images.forEach((img) => img.removeEventListener("load", refresh));
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
     },
     { scope: sectionRef }
   );
 
   return sectionRef;
 }
+
 
 /**
  * Hook 7: Pinned Storytelling Section

@@ -4,8 +4,9 @@ import React from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
-import { GSAPTextReveal, GSAPScrollReveal } from "@/components/animations";
 import { Heart, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { motion } from "motion/react";
+import { fadeUp, staggerContainer, staggerItem } from "@/lib/animations";
 
 export function BrandIntroSection() {
   const pillarCards = [
@@ -46,7 +47,13 @@ export function BrandIntroSection() {
   return (
     <Section theme="ivory" padding="lg">
       <Container size="xl">
-        <GSAPTextReveal as="div">
+        {/* Motion Variant 1: Fade Up Entrance */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
+        >
           <Heading
             eyebrow="Our Story &amp; Heritage"
             title="Artisanal Ceremonial Plating &amp; Presentation"
@@ -54,13 +61,19 @@ export function BrandIntroSection() {
             align="center"
             hasDivider
           />
-        </GSAPTextReveal>
+        </motion.div>
 
         {/* Narrative & Pillar Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch mt-10">
-          {/* Left Family Philosophy Narrative Card */}
-          <GSAPScrollReveal type="fadeUp" className="lg:col-span-5 flex flex-col h-full">
-            <div className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-warm-sm hover:shadow-warm-md hover:border-accent/40 flex flex-col justify-center h-full relative overflow-hidden gap-4 transition-all duration-300">
+          {/* Left Family Philosophy Narrative Card - Motion Variant 1: Fade Up Entrance */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
+            className="lg:col-span-5 flex flex-col h-full"
+          >
+            <div className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-warm-sm hover:shadow-warm-md hover:border-accent/40 flex flex-col justify-center h-full relative overflow-hidden gap-4 transition-shadow transition-colors duration-300">
               <h3 className="text-h3 font-serif font-medium text-foreground leading-snug">
                 Preserving Sacred Traditions with Modern Luxury Elegance
               </h3>
@@ -73,19 +86,21 @@ export function BrandIntroSection() {
                 We handle every arrangement with extreme precision—handpicking fresh morning jasmine, lotus, and roses, pairing rich traditional ghee sweets and exotic fruits in flawless stacked pyramids, and decorating brass platters with regal color themes to match your ceremonial mandapam.
               </p>
             </div>
-          </GSAPScrollReveal>
+          </motion.div>
 
-          {/* Right 4 Pillar Cards */}
-          <GSAPScrollReveal
-            type="fadeUp"
-            stagger={0.12}
+          {/* Right 4 Pillar Cards - Motion Variant 2: Staggered Grid Reveal */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
             className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 auto-rows-fr gap-6 h-full"
           >
             {pillarCards.map((card, index) => (
-              <div
+              <motion.div
                 key={index}
-                data-gsap-item
-                className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-warm-sm hover:shadow-warm-md hover:border-accent/40 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden group"
+                variants={staggerItem}
+                className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-warm-sm hover:shadow-warm-md hover:border-accent/40 transition-shadow transition-colors duration-300 flex flex-col justify-between h-full relative overflow-hidden group"
               >
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
@@ -105,13 +120,14 @@ export function BrandIntroSection() {
                     {card.description}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </GSAPScrollReveal>
+          </motion.div>
         </div>
       </Container>
     </Section>
   );
 }
+
 
 

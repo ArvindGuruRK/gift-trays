@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ReactLenis, useLenis } from "lenis/react";
 import type { LenisRef } from "lenis/react";
 import gsap from "gsap";
@@ -24,14 +24,22 @@ function ScrollTriggerSync() {
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   const lenisRef = useRef<LenisRef>(null);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setIsReducedMotion(mediaQuery.matches);
 
-    if (prefersReducedMotion) {
-      return;
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      setIsReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    if (mediaQuery.matches) {
+      return () => {
+        mediaQuery.removeEventListener("change", handleMediaChange);
+      };
     }
 
     function update(time: number) {
@@ -42,28 +50,34 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
       gsap.ticker.remove(update);
     };
   }, []);
 
-  return (
-    <ReactLenis
-      ref={lenisRef}
-      root
-      options={{
+  const lenisOptions = isReducedMotion
+    ? {
+        duration: 0,
+        smoothWheel: false,
+        autoRaf: true,
+      }
+    : {
         duration: 1.2,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: "vertical",
-        gestureOrientation: "vertical",
+        orientation: "vertical" as const,
+        gestureOrientation: "vertical" as const,
         smoothWheel: true,
         wheelMultiplier: 1,
         touchMultiplier: 1.5,
         autoRaf: false,
-      }}
-    >
+      };
+
+  return (
+    <ReactLenis ref={lenisRef} root options={lenisOptions}>
       <ScrollTriggerSync />
       {children}
     </ReactLenis>
   );
 }
+
 

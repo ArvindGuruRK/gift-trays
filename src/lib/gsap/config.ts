@@ -6,6 +6,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 // Ensure ScrollTrigger is registered client-side
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+
+  // Mobile browsers fire a resize when the URL bar collapses or expands mid-scroll.
+  // Refreshing on that resize recalculates pin start/end while a section is pinned,
+  // which snaps the page to a new scroll position. Ignore the vertical-only resize;
+  // orientation changes and real width changes still refresh.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
 /**

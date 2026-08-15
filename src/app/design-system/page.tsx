@@ -41,7 +41,17 @@ import {
 } from "@/components/animations";
 
 export default function DesignSystemPage() {
-  const lenis = useLenis();
+  const [scrollY, setScrollY] = useState<number>(0);
+  const lenis = useLenis((lenisInstance) => {
+    if (lenisInstance?.scroll !== undefined) {
+      const val = Math.round(lenisInstance.scroll);
+      setScrollY((prev) => (prev !== val ? val : prev));
+    }
+  });
+
+  // Motion Demo Replay State
+  const [fadeUpKey, setFadeUpKey] = useState<number>(0);
+  const [staggerKey, setStaggerKey] = useState<number>(0);
 
   // Interactive Form State
   const [trayCount, setTrayCount] = useState<number>(7);
@@ -959,7 +969,7 @@ export default function DesignSystemPage() {
 
       <OrnamentalDivider width="lg" />
 
-      {/* SECTION 8: MOTION FOUNDATIONS */}
+      {/* SECTION 8: MOTION FOUNDATIONS & LENIS INTEGRATION */}
       <Section id="animations" theme="pattern" padding="lg">
         <Container size="xl">
           <Heading
@@ -970,31 +980,160 @@ export default function DesignSystemPage() {
             hasDivider
           />
 
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8"
-          >
-            <motion.div variants={staggerItem} className="p-6 bg-card border border-border rounded-xl shadow-warm-sm flex flex-col gap-2">
-              <span className="text-xs font-semibold text-accent uppercase">Motion Variant 1</span>
-              <h4 className="font-serif text-lg font-semibold">Fade Up Entrance</h4>
-              <p className="text-xs text-muted-foreground">y: 35px → 0px with luxury ease cubic-bezier(0.22, 1, 0.36, 1).</p>
-            </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+            {/* Motion Variant 1: Fade Up Entrance */}
+            <div className="p-6 bg-card border border-border rounded-2xl shadow-warm-sm flex flex-col justify-between gap-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    Motion Variant 1
+                  </span>
+                  <Badge variant="maroon" size="sm">fadeUp</Badge>
+                </div>
+                <h4 className="font-serif text-xl font-semibold text-foreground">
+                  Fade Up Entrance
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-sans">
+                  Translates element vertically from <strong>y: 35px → 0px</strong> over <strong>650ms</strong> using custom luxury cubic-bezier <code>(0.22, 1, 0.36, 1)</code>.
+                </p>
+              </div>
 
-            <motion.div variants={staggerItem} className="p-6 bg-card border border-border rounded-xl shadow-warm-sm flex flex-col gap-2">
-              <span className="text-xs font-semibold text-accent uppercase">Motion Variant 2</span>
-              <h4 className="font-serif text-lg font-semibold">Staggered Grid Reveal</h4>
-              <p className="text-xs text-muted-foreground">Stagger child elements with 120ms progressive delay interval.</p>
-            </motion.div>
+              {/* Interactive Demo Container */}
+              <div className="bg-secondary/40 p-4 rounded-xl border border-border/60 min-h-[140px] flex items-center justify-center relative overflow-hidden">
+                <motion.div
+                  key={fadeUpKey}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="p-4 bg-primary text-primary-foreground rounded-lg shadow-warm-md text-center flex flex-col items-center gap-1 w-full"
+                >
+                  <Sparkles className="w-5 h-5 text-accent" />
+                  <span className="font-serif text-sm font-semibold">Luxury Fade Up Card</span>
+                  <span className="text-[11px] text-sand-beige/80 font-mono">y: 35px → 0px (650ms)</span>
+                </motion.div>
+              </div>
 
-            <motion.div variants={staggerItem} className="p-6 bg-card border border-border rounded-xl shadow-warm-sm flex flex-col gap-2">
-              <span className="text-xs font-semibold text-accent uppercase">Lenis Integration</span>
-              <h4 className="font-serif text-lg font-semibold">Cinematic Smooth Scroll</h4>
-              <p className="text-xs text-muted-foreground">Synchronized with GSAP ScrollTrigger ticker & respects reduced-motion.</p>
-            </motion.div>
-          </motion.div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => setFadeUpKey((prev) => prev + 1)}
+                leftIcon={<Play size={14} className="text-accent" />}
+              >
+                Replay Fade Up Animation
+              </Button>
+            </div>
+
+            {/* Motion Variant 2: Staggered Grid Reveal */}
+            <div className="p-6 bg-card border border-border rounded-2xl shadow-warm-sm flex flex-col justify-between gap-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    Motion Variant 2
+                  </span>
+                  <Badge variant="gold" size="sm">staggerContainer</Badge>
+                </div>
+                <h4 className="font-serif text-xl font-semibold text-foreground">
+                  Staggered Grid Reveal
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-sans">
+                  Cascades child elements with progressive <strong>120ms delay intervals</strong> and 50ms initial container delay for natural grid choreography.
+                </p>
+              </div>
+
+              {/* Interactive Demo Grid */}
+              <div className="bg-secondary/40 p-3 rounded-xl border border-border/60 min-h-[140px] flex items-center justify-center">
+                <motion.div
+                  key={staggerKey}
+                  variants={staggerContainer}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 gap-2 w-full"
+                >
+                  {[
+                    { label: "Item 01", delay: "0ms" },
+                    { label: "Item 02", delay: "120ms" },
+                    { label: "Item 03", delay: "240ms" },
+                    { label: "Item 04", delay: "360ms" },
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      variants={staggerItem}
+                      className="p-2.5 bg-card border border-border rounded-lg shadow-warm-sm flex flex-col items-center justify-center text-center"
+                    >
+                      <span className="font-serif text-xs font-semibold text-foreground">{item.label}</span>
+                      <span className="text-[10px] text-accent font-mono">+{item.delay}</span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => setStaggerKey((prev) => prev + 1)}
+                leftIcon={<Play size={14} className="text-accent" />}
+              >
+                Replay Staggered Grid
+              </Button>
+            </div>
+
+            {/* Lenis Integration: Cinematic Smooth Scroll */}
+            <div className="p-6 bg-card border border-border rounded-2xl shadow-warm-sm flex flex-col justify-between gap-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    Lenis Integration
+                  </span>
+                  <Badge variant="success" size="sm">Active (Ticker Sync)</Badge>
+                </div>
+                <h4 className="font-serif text-xl font-semibold text-foreground">
+                  Cinematic Smooth Scroll
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed font-sans">
+                  Driven via <strong>GSAP ticker synchronization</strong> without frame tearing. Automatically honors <code>prefers-reduced-motion</code>.
+                </p>
+              </div>
+
+              {/* Real-time Lenis Status Indicator */}
+              <div className="bg-secondary/40 p-4 rounded-xl border border-border/60 min-h-[140px] flex flex-col justify-between">
+                <div className="flex items-center justify-between border-b border-border/50 pb-2 text-xs">
+                  <span className="text-muted-foreground font-sans">Live Scroll Position Y:</span>
+                  <code className="font-mono font-bold text-primary text-sm">{scrollY} px</code>
+                </div>
+
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className="text-muted-foreground font-sans">GSAP Ticker Rate:</span>
+                  <span className="font-mono font-semibold text-foreground">60 FPS Sync</span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground font-sans">Scroll Ease:</span>
+                  <span className="font-mono text-accent font-semibold">Normalized RAF</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="flex-1 text-xs"
+                  onClick={() => lenis?.scrollTo("#overlays", { duration: 1.2, offset: -100 })}
+                >
+                  Scroll Down
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="flex-1 text-xs"
+                  onClick={() => lenis?.scrollTo(0, { duration: 1.5 })}
+                >
+                  Scroll to Top
+                </Button>
+              </div>
+            </div>
+          </div>
         </Container>
       </Section>
 
@@ -1192,7 +1331,9 @@ export default function DesignSystemPage() {
               </div>
             </div>
 
-            {/* 10.4 Horizontal Scroll Showcase */}
+            {/* 10.4 Horizontal Scroll Showcase — the pinned track itself is
+                rendered full-bleed below, since a pinned element has to own the
+                whole viewport to read correctly. */}
             <div className="bg-card rounded-2xl border border-border p-6 shadow-warm-md flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border/50 pb-3">
                 <h3 className="font-serif text-xl font-semibold text-foreground">
@@ -1202,31 +1343,43 @@ export default function DesignSystemPage() {
               </div>
 
               <p className="text-xs text-muted-foreground font-sans">
-                Scroll down to translate through the showcase cards horizontally:
+                Keep scrolling: the section below pins the page and converts vertical scroll into
+                horizontal travel. Every card passes through and the last one holds briefly before
+                vertical scrolling resumes.
               </p>
-
-              <GSAPHorizontalScroll className="bg-secondary/30 rounded-xl border border-border">
-                {[
-                  { title: "1. Flowers & Garlands", desc: "Fresh jasmine, marigold & lotus decor." },
-                  { title: "2. Traditional Sweets", desc: "Handcrafted ghee sweets & dry fruits." },
-                  { title: "3. Fruit Arrangements", desc: "Exotic and seasonal fruit baskets." },
-                  { title: "4. Silk & Coconuts", desc: "Kanchipuram silk towel & decorated coconuts." },
-                  { title: "5. Brass & Silver", desc: "Polished brass lamps & silver platters." },
-                ].map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="w-72 p-6 rounded-xl bg-card border border-border shadow-warm-sm flex flex-col gap-3 shrink-0"
-                  >
-                    <span className="text-xs font-mono text-accent font-bold">Step 0{idx + 1}</span>
-                    <h4 className="font-serif text-lg font-semibold text-foreground">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground">{item.desc}</p>
-                  </div>
-                ))}
-              </GSAPHorizontalScroll>
             </div>
           </div>
         </Container>
       </Section>
+
+      {/* 10.4 demo track — full-bleed so the pin fills the viewport */}
+      <GSAPHorizontalScroll
+        className="bg-secondary/30 border-y border-border"
+        speed={1.1}
+        holdRatio={0.1}
+      >
+        {[
+          { title: "Flowers & Garlands", desc: "Fresh jasmine, marigold & lotus decor." },
+          { title: "Traditional Sweets", desc: "Handcrafted ghee sweets & dry fruits." },
+          { title: "Fruit Arrangements", desc: "Exotic and seasonal fruit baskets." },
+          { title: "Silk & Coconuts", desc: "Kanchipuram silk towel & decorated coconuts." },
+          { title: "Brass & Silver", desc: "Polished brass lamps & silver platters." },
+          { title: "Paruppu Thengai", desc: "Sugar cones finished with edible gold leaf." },
+          { title: "Velvet Transit", desc: "Dust-free shrouds & shock-resistant frames." },
+          { title: "Stage Setup", desc: "White-glove plating at the venue." },
+        ].map((item, idx) => (
+          <div
+            key={idx}
+            className="w-80 p-6 rounded-xl bg-card border border-border shadow-warm-sm flex flex-col gap-3 shrink-0"
+          >
+            <span className="text-xs font-mono text-accent font-bold">
+              Step {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+            </span>
+            <h4 className="font-serif text-lg font-semibold text-foreground">{item.title}</h4>
+            <p className="text-xs text-muted-foreground">{item.desc}</p>
+          </div>
+        ))}
+      </GSAPHorizontalScroll>
 
       {/* Interactive Modal Dialog Showcase */}
       <Modal
