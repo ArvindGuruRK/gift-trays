@@ -104,21 +104,50 @@ export function SplashLoader({
   const readyToDismiss = effectiveAssetsReady && (liftFinished || minTimeElapsed);
   const showSplash = forceShow || !readyToDismiss;
 
-  // What the bar actually shows.
-  //
-  // Real preload progress when a caller supplies it, but held just short of full
-  // until the page is genuinely ready — a bar that sits at 100% while the splash
-  // is still up is the exact thing that makes a loader feel like it's lying.
-  const hasRealProgress = typeof progress === "number" && totalCount > 0;
-  const barValue = readyToDismiss
-    ? 1
-    : hasRealProgress
-      ? Math.min(progress, 0.96)
-      : 0.9;
+  const hasCompleted = useRef(false);
 
-  const statusText = readyToDismiss
+  // Smooth time-based progress floor (0 -> 0.94 over minDuration)
+  const [timeProgress, setTimeProgress] = useState<number>(0);
+
+  useEffect(() => {
+    if (!showSplash) return;
+    const startTime = performance.now();
+    let animFrame: number;
+
+    const updateProgress = () => {
+      const elapsed = performance.now() - startTime;
+      const targetDuration = Math.max(1000, minDuration - SPLASH_FADE_MS);
+      const ratio = Math.min(1, elapsed / targetDuration);
+      // Smooth ease-out quad curve so progress starts moving immediately from 0%
+      const eased = 1 - (1 - ratio) * (1 - ratio);
+      setTimeProgress(eased * 0.94);
+
+      if (ratio < 1) {
+        animFrame = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    animFrame = requestAnimationFrame(updateProgress);
+    return () => cancelAnimationFrame(animFrame);
+  }, [showSplash, minDuration]);
+
+  // What the bar actually shows.
+  // Combines real asset preload progress with smooth time-based progress floor.
+  const hasRealProgress = typeof progress === "number" && totalCount > 0;
+  const realProgressValue = hasRealProgress ? progress : 0;
+  const combinedProgress = Math.max(timeProgress, realProgressValue);
+
+  const isDismissing = hasCompleted.current || readyToDismiss;
+  const barValue = isDismissing ? 1 : Math.min(combinedProgress, 0.96);
+
+  const calculatedLoaded = hasRealProgress
+    ? loadedCount
+    : Math.min(totalCount || 18, Math.round(combinedProgress * (totalCount || 18)));
+  const calculatedTotal = totalCount || 18;
+
+  const statusText = isDismissing
     ? "Welcome to Seer Varisai Thattu"
-    : statusFor(hasRealProgress ? progress : 0, loadedCount, totalCount);
+    : statusFor(combinedProgress, calculatedLoaded, calculatedTotal);
 
   // Safety cap — if something upstream is tracking real asset load state via `assetsReady`
   // and it never flips true (stalled network, failed request), never trap the visitor
@@ -173,7 +202,6 @@ export function SplashLoader({
   // waits through — it was the single largest contributor to this feeling sluggish.
   // Notify the parent when splash dismissal begins (at fade-out onset) so underlying hero animations
   // reveal seamlessly as the splash lifts, rather than sitting on a blank screen after dismissal.
-  const hasCompleted = useRef(false);
   useEffect(() => {
     if (forceShow || hasCompleted.current) return;
 
@@ -322,22 +350,17 @@ export function SplashLoader({
                 aria-valuemax={100}
                 aria-valuenow={Math.round(barValue * 100)}
                 aria-label="Loading gallery"
-                className="w-72 sm:w-96 h-2.5 bg-black/40 rounded-full overflow-hidden border border-accent/30 p-px relative shadow-inner"
+                className="w-72 sm:w-96 h-3 bg-black/50 rounded-full overflow-hidden border border-accent/40 p-0.5 relative shadow-inner flex items-center"
               >
                 <motion.div
-                  // Driven by scaleX rather than width. Animating `width` is a
-                  // layout+paint animation on every frame, running for the whole
-                  // splash — precisely while fonts are swapping in and GSAP is
-                  // measuring trigger positions. scaleX is composited instead.
-                  initial={{ scaleX: 0 }}
-                  // Tracks the REAL preload count when one is wired up, so the bar
-                  // means something; it only reaches a full 100% once the page is
-                  // genuinely ready to be shown.
-                  animate={{ scaleX: barValue }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  style={{ transformOrigin: "left center" }}
-                  className="h-full w-full bg-linear-to-r from-amber-600 via-amber-400 to-yellow-300 rounded-full shadow-[0_0_12px_rgba(234,179,8,0.6)] relative"
-                />
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${Math.max(barValue > 0 ? 3 : 0, barValue * 100)}%` }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="h-full bg-linear-to-r from-amber-700 via-amber-400 to-yellow-300 rounded-full shadow-[0_0_14px_rgba(234,179,8,0.7)] relative overflow-hidden"
+                >
+                  {/* Glowing Leading Edge Highlight */}
+                  <div className="absolute right-0 top-0 bottom-0 w-3 bg-white/80 blur-[1px] rounded-full" />
+                </motion.div>
               </div>
             </div>
           </div>
