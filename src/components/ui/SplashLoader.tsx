@@ -22,14 +22,14 @@ function statusFor(progress: number, loaded: number, total: number): string {
 /**
  * Hard ceiling on the whole splash, measured from navigation start.
  *
- * Waiting for a full gallery preload and guaranteeing a ~2s splash are in direct
+ * Waiting for a full gallery preload and guaranteeing a ~3s splash are in direct
  * conflict on a slow connection, so this is the tiebreaker: the preload gets the
- * 2s window plus a short grace, and after that the splash leaves regardless.
+ * 3s window plus a short grace, and after that the splash leaves regardless.
  * Anything still in flight keeps downloading behind the real page — the images
  * are lazy with blur placeholders, so a straggler degrades gracefully instead of
  * holding the visitor on a loading screen.
  */
-const MAX_WAIT_MS = 3500;
+const MAX_WAIT_MS = 4500;
 
 /**
  * Always keep the splash up for at least this long *after* hydration, even when
@@ -73,7 +73,7 @@ export interface SplashLoaderProps {
 
 export function SplashLoader({
   forceShow = false,
-  minDuration = 2000,
+  minDuration = 3000,
   assetsReady,
   progress,
   loadedCount = 0,
@@ -193,7 +193,7 @@ export function SplashLoader({
           // client bundle takes to boot. Skipped when `forceShow` is set, which
           // is the design-system preview holding it open on purpose.
           className={cn(
-            "fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-b from-[#3E1017] via-[#6B1F2A] to-[#2D0B10] text-amber-100 overflow-hidden select-none",
+            "fixed inset-0 z-9999 flex flex-col items-center justify-center bg-linear-to-b from-[#3E1017] via-deep-maroon to-[#2D0B10] text-amber-100 overflow-hidden select-none",
             !forceShow && "ui-splash-lift"
           )}
           // `minDuration` is the total time the splash owns the screen, so the
@@ -216,7 +216,7 @@ export function SplashLoader({
           }}
         >
           {/* Ambient Radial Glow */}
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-accent/20 blur-[120px] pointer-events-none animate-pulse" />
+          <div className="absolute w-125 h-125 rounded-full bg-accent/20 blur-[120px] pointer-events-none animate-pulse" />
 
           {/* Traditional Background Pattern Overlay */}
           <div className="absolute inset-0 bg-kolam-pattern opacity-10 pointer-events-none" />
@@ -248,7 +248,7 @@ export function SplashLoader({
               <div className="absolute -inset-2 rounded-full border border-dashed border-accent/50" />
 
               {/* Inner Circular Base */}
-              <div className="w-64 h-64 sm:w-[300px] sm:h-[300px] rounded-full bg-[#4A141D]/90 border-2 border-accent/60 shadow-2xl shadow-accent/30 flex items-center justify-center p-0 backdrop-blur-md overflow-hidden">
+              <div className="w-64 h-64 sm:w-75 sm:h-75 rounded-full bg-[#4A141D]/90 border-2 border-accent/60 shadow-2xl shadow-accent/30 flex items-center justify-center p-0 backdrop-blur-md overflow-hidden">
                 {/* Matched by a <link rel="preload" as="video"> in the root layout —
                     without it this can't even start downloading until the client
                     bundle has parsed and hydrated, which is most of the splash. */}
@@ -267,9 +267,9 @@ export function SplashLoader({
             {/* Eyebrow & Brand Title */}
             <div className="flex flex-col items-center gap-1.5 mb-6">
               <div className="flex items-center gap-2 text-accent/80 text-[11px] sm:text-xs font-mono uppercase tracking-[0.3em]">
-                <span className="w-8 h-[1px] bg-accent/40" />
+                <span className="w-8 h-px bg-accent/40" />
                 <span>HANDCRAFTED HERITAGE</span>
-                <span className="w-8 h-[1px] bg-accent/40" />
+                <span className="w-8 h-px bg-accent/40" />
               </div>
 
               <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-wider text-accent drop-shadow-md">
@@ -302,7 +302,7 @@ export function SplashLoader({
                 aria-valuemax={100}
                 aria-valuenow={Math.round(barValue * 100)}
                 aria-label="Loading gallery"
-                className="w-72 sm:w-96 h-2.5 bg-black/40 rounded-full overflow-hidden border border-accent/30 p-[1px] relative shadow-inner"
+                className="w-72 sm:w-96 h-2.5 bg-black/40 rounded-full overflow-hidden border border-accent/30 p-px relative shadow-inner"
               >
                 <motion.div
                   // Driven by scaleX rather than width. Animating `width` is a
@@ -316,7 +316,7 @@ export function SplashLoader({
                   animate={{ scaleX: barValue }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   style={{ transformOrigin: "left center" }}
-                  className="h-full w-full bg-gradient-to-r from-amber-600 via-amber-400 to-yellow-300 rounded-full shadow-[0_0_12px_rgba(234,179,8,0.6)] relative"
+                  className="h-full w-full bg-linear-to-r from-amber-600 via-amber-400 to-yellow-300 rounded-full shadow-[0_0_12px_rgba(234,179,8,0.6)] relative"
                 />
               </div>
             </div>

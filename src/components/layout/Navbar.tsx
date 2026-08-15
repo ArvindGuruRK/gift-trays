@@ -53,23 +53,14 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          // Height is deliberately CONSTANT across scroll states. This used to
-          // toggle py-5 -> py-3 and add a border under `transition-all`, i.e. a
-          // 300ms layout animation on a sticky element — which also shifted the
-          // pin offset that the horizontal-scroll section measures against.
-          // Only colours and shadow change now, none of which trigger layout.
-          // Height is pinned to the --nav-height custom property so the GSAP
-          // horizontal-scroll pin can read the same value without measuring a
-          // live element (see useGSAPHorizontalScroll).
-          "sticky top-0 z-40 w-full h-(--nav-height) border-b",
-          "transition-[background-color,border-color,box-shadow] duration-300",
+          "sticky top-0 z-40 w-full transition-all duration-300",
           isScrolled
-            ? "bg-card/90 backdrop-blur-md border-border shadow-warm-sm"
-            : "bg-background/80 backdrop-blur-sm border-transparent"
+            ? "bg-card/90 backdrop-blur-md border-b border-border shadow-warm-sm py-3"
+            : "bg-background/80 backdrop-blur-sm py-5"
         )}
       >
-        <Container size="xl" className="h-full">
-          <div className="relative flex items-center justify-between h-full">
+        <Container size="xl">
+          <div className="relative flex items-center justify-between">
             {/* Brand Logo */}
             <Link href="/" className="flex items-center gap-3 group z-10">
               <div className="w-10 h-10 rounded-full bg-primary/10 border border-accent/40 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
@@ -104,7 +95,7 @@ export function Navbar() {
                     {isActive && (
                       <motion.div
                         layoutId="activeNavIndicator"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}

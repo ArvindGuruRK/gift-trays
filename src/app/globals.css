@@ -286,7 +286,7 @@ html.lenis.lenis-smooth [data-lenis-prevent] {
 
 .ui-splash-lift {
   animation: ui-splash-lift 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: var(--splash-delay, 2000ms);
+  animation-delay: var(--splash-delay, 3000ms);
 }
 
 /* Once it has lifted it must not intercept clicks, even if React still has it

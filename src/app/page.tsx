@@ -119,7 +119,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
 
-      {/* Brand splash — a flat 2 seconds, while the collection and first gallery
+      {/* Brand splash — a flat 3 seconds, while the collection and first gallery
           photos warm into cache behind it and the bar reports the real count.
 
           Note there is no `assetsReady` here, deliberately. Gating dismissal on the
@@ -129,7 +129,7 @@ export default function HomePage() {
           loading behind the page. */}
       <SplashLoader
         onComplete={handleSplashComplete}
-        minDuration={2000}
+        minDuration={3000}
         progress={preload.progress}
         loadedCount={preload.loaded}
         totalCount={preload.total}
