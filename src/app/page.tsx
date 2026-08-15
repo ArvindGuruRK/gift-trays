@@ -95,17 +95,17 @@ export default function HomePage() {
       {/* Section 4: Occasions We Serve */}
       <OccasionsSection onSelectOccasion={handleOccasionClick} />
 
-      {/* Section 5: Step-by-Step GSAP Horizontal Scroll Track */}
+      {/* Section 5: Conversion Infrastructure - Interactive Consultation & Enquiry Form */}
+      <InteractiveEnquirySection onSubmitEnquiry={handleFormSubmit} />
+
+      {/* Section 6: Step-by-Step GSAP Horizontal Scroll Track */}
       <HowItWorksSection />
 
-      {/* Section 6: Real Photo Gallery Preview */}
+      {/* Section 7: Real Photo Gallery Preview */}
       <GalleryPreviewSection onImageClick={(item) => handleCollectionClick({ title: item.title, description: item.location, subtitle: item.category })} />
 
-      {/* Section 7: Verified Customer Testimonials */}
+      {/* Section 8: Verified Customer Testimonials */}
       <TestimonialsSection />
-
-      {/* Section 8: Interactive Customer Enquiry Form */}
-      <InteractiveEnquirySection onSubmitEnquiry={handleFormSubmit} />
 
       {/* Section 9: Final Deep Maroon Festive CTA */}
       <FinalCTASection onEnquireClick={scrollToEnquiry} />

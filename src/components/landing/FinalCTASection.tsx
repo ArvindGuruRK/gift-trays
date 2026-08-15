@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
@@ -8,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { KolamCornerFlourish, LotusMotif } from "@/components/ui/Motifs";
 import { GSAPScrollReveal } from "@/components/animations";
-import { Sparkles, MessageCircle, Phone } from "lucide-react";
+import { Sparkles, Phone } from "lucide-react";
 
 interface FinalCTASectionProps {
   onEnquireClick?: () => void;
@@ -60,7 +61,15 @@ export function FinalCTASection({ onEnquireClick }: FinalCTASectionProps) {
                 <Button
                   variant="whatsapp"
                   size="lg"
-                  leftIcon={<MessageCircle className="w-5 h-5" />}
+                  leftIcon={
+                    <Image
+                      src="/icons/whatsapp.svg"
+                      alt="WhatsApp Icon"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 shrink-0"
+                    />
+                  }
                 >
                   WhatsApp Consultation
                 </Button>

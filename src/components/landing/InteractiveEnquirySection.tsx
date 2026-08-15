@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
@@ -13,7 +14,7 @@ import { NumberSelector } from "@/components/ui/NumberSelector";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { GSAPTextReveal } from "@/components/animations";
-import { Send, ShieldCheck, Sparkles, Phone, MessageCircle } from "lucide-react";
+import { Sparkles, ShieldCheck } from "lucide-react";
 
 interface InteractiveEnquirySectionProps {
   onSubmitEnquiry?: (formData: {
@@ -29,10 +30,10 @@ interface InteractiveEnquirySectionProps {
 }
 
 export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquirySectionProps) {
-  const [fullName, setFullName] = useState<string>("Smt. Sundar");
-  const [phone, setPhone] = useState<string>("+91 98765 43210");
-  const [location, setLocation] = useState<string>("mandapam");
-  const [eventDate, setEventDate] = useState<string>("2026-11-20");
+  const [fullName, setFullName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [eventDate, setEventDate] = useState<string>("");
   const [trayCount, setTrayCount] = useState<number>(11);
   const [occasion, setOccasion] = useState<string>("wedding");
   const [notes, setNotes] = useState<string>("");
@@ -52,8 +53,18 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
     });
   };
 
+  const detailsArray: string[] = [];
+  if (trayCount) detailsArray.push(`${trayCount} trays`);
+  if (occasion) detailsArray.push(`for ${occasion}`);
+  if (eventDate) detailsArray.push(`on ${eventDate}`);
+  if (location) detailsArray.push(`at ${location}`);
+
+  const detailsStr = detailsArray.length > 0 ? detailsArray.join(" ") : "Seer Varisai Thattu arrangements";
+  const contactStr = fullName || phone ? ` Contact: ${fullName}${phone ? ` (${phone})` : ""}.` : "";
+  const notesStr = notes ? ` Notes: ${notes}` : "";
+
   const whatsappMessage = encodeURIComponent(
-    `Hello Seer Varisai Thattu! I would like to enquire about ${trayCount} trays for ${occasion} on ${eventDate} at ${location}. Contact: ${fullName} (${phone}). ${notes}`
+    `Hello Seer Varisai Thattu! I would like to enquire about ${detailsStr}.${contactStr}${notesStr}`
   );
 
   return (
@@ -64,14 +75,14 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
             eyebrow="Conversion Infrastructure"
             title="Book Your Custom Seer Varisai Consultation"
             subtitle="Fill out your event details below or chat directly with our master plating concierge on WhatsApp."
-            align="left"
+            align="center"
             hasDivider
           />
         </GSAPTextReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10">
+        <div className="max-w-4xl mx-auto mt-10">
           {/* Main Enquiry Form */}
-          <form onSubmit={handleSubmit} className="lg:col-span-8 bg-card p-8 rounded-2xl border border-border shadow-warm-md flex flex-col gap-6">
+          <form onSubmit={handleSubmit} className="bg-card p-6 sm:p-10 rounded-2xl border border-border shadow-warm-md flex flex-col gap-6">
             <h3 className="text-h3 font-serif font-medium text-foreground border-b border-border/50 pb-3">
               Event Details &amp; Contact Form
             </h3>
@@ -79,14 +90,14 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="Full Name *"
-                placeholder="e.g. Ramesh Sundaram"
+                placeholder="Enter your full name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
               />
               <Input
                 label="Phone Number (WhatsApp) *"
-                placeholder="+91 98765 43210"
+                placeholder="Enter your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
@@ -96,6 +107,7 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Select
                 label="Event Venue Type"
+                placeholder="Select your event venue type"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 options={[
@@ -139,7 +151,7 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
 
             <Textarea
               label="Customization Requirements or Flower Preferences"
-              placeholder="Specify preferred fruits, flower color theme, specific items needed, or budget constraints..."
+              placeholder="Enter your customization requirements, flower preferences, or budget guidelines..."
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -153,7 +165,7 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
               description="Our master artisan will send real photography examples and packed tray plating concepts within 2 hours."
             />
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center sm:justify-start gap-4 pt-2">
               <Button
                 type="submit"
                 variant="primary"
@@ -172,55 +184,35 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
                   type="button"
                   variant="whatsapp"
                   size="lg"
-                  leftIcon={<MessageCircle className="w-5 h-5" />}
+                  leftIcon={
+                    <Image
+                      src="/icons/whatsapp.svg"
+                      alt="WhatsApp Icon"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 shrink-0"
+                    />
+                  }
                 >
                   Instant WhatsApp Message
                 </Button>
               </a>
             </div>
+
+            {/* Privacy & Customization Guarantee */}
+            <div className="mt-4 bg-secondary/40 p-4 sm:p-5 rounded-xl border border-border flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-semibold text-primary">Privacy &amp; Customization Guarantee</span>
+                <p className="text-xs text-muted-foreground leading-relaxed font-sans">
+                  Every enquiry is handled personally by our lead plating designers. We strictly safeguard customer privacy and event details.
+                </p>
+              </div>
+            </div>
           </form>
-
-          {/* Side Trust Banner & Quick Contact Details */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="bg-card p-6 rounded-2xl border border-border shadow-warm-sm flex flex-col gap-4">
-              <h4 className="text-h4 font-medium text-foreground border-b border-border/50 pb-2">
-                Direct Concierge Desk
-              </h4>
-              <p className="text-xs text-muted-foreground font-sans leading-relaxed">
-                Prefer to speak directly with our master plating specialists? Call or message us on WhatsApp anytime.
-              </p>
-
-              <div className="flex flex-col gap-3 pt-2">
-                <a href="tel:+919876543210" className="flex items-center gap-3 p-3 rounded-xl bg-secondary/40 hover:bg-secondary border border-border transition-colors">
-                  <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <div className="flex flex-col text-xs font-sans">
-                    <span className="font-bold text-foreground">+91 98765 43210</span>
-                    <span className="text-muted-foreground">Direct Phone Call</span>
-                  </div>
-                </a>
-
-                <a href={`https://wa.me/919876543210?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 transition-colors">
-                  <MessageCircle className="w-5 h-5 text-[#25D366] shrink-0" />
-                  <div className="flex flex-col text-xs font-sans">
-                    <span className="font-bold text-foreground">WhatsApp Chat</span>
-                    <span className="text-muted-foreground">Quick photos &amp; quotes</span>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            <div className="bg-secondary/40 p-6 rounded-2xl border border-border flex flex-col gap-3">
-              <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                <ShieldCheck className="w-5 h-5 text-accent" />
-                <span>Privacy &amp; Customization Guarantee</span>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed font-sans">
-                Every enquiry is handled personally by our lead plating designers. We strictly safeguard customer privacy and event details.
-              </p>
-            </div>
-          </div>
         </div>
       </Container>
     </Section>
   );
 }
+
