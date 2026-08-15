@@ -16,9 +16,11 @@ import { Sparkles } from "lucide-react";
 interface HeroSectionProps {
   onEnquireClick?: () => void;
   isSplashActive?: boolean;
+  /** Fires once the real hero image has finished loading (or failed) — lets the splash wait on it for real. */
+  onHeroImageReady?: () => void;
 }
 
-export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps) {
+export function HeroSection({ onEnquireClick, isSplashActive, onHeroImageReady }: HeroSectionProps) {
   return (
     <Section theme="maroon" padding="xl" className="relative overflow-hidden min-h-[85vh] flex items-center">
       {/* Top-Right & Bottom-Left Corner Kolam Flourishes */}
@@ -107,6 +109,8 @@ export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps
                     width={800}
                     height={800}
                     priority
+                    onLoad={onHeroImageReady}
+                    onError={onHeroImageReady}
                     className="w-full h-auto object-contain transition-transform duration-700 ease-luxury hover:scale-105"
                   />
                 </GSAPImageReveal>

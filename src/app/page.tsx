@@ -32,6 +32,9 @@ export default function HomePage() {
 
   // Track active state of initial Splash Loader
   const [isSplashActive, setIsSplashActive] = useState<boolean>(true);
+  // Real load state of the hero visual — lets the splash wait on the actual image
+  // instead of a fixed timer, so it never dismisses onto a still-loading hero.
+  const [isHeroImageReady, setIsHeroImageReady] = useState<boolean>(false);
 
   // Global Interactive Modal & Drawer State
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -77,14 +80,22 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
-      {/* Brand Animated Splash Loader */}
-      <SplashLoader onComplete={() => setIsSplashActive(false)} minDuration={2600} />
+      {/* Brand Animated Splash Loader — waits on the real hero image, not a guessed timer */}
+      <SplashLoader
+        onComplete={() => setIsSplashActive(false)}
+        minDuration={2600}
+        assetsReady={isHeroImageReady}
+      />
 
       {/* Main Navigation Bar */}
       <Navbar />
 
       {/* Section 1: Hero Section with GSAP Timeline Sequence (waits for splash completion) */}
-      <HeroSection isSplashActive={isSplashActive} onEnquireClick={scrollToEnquiry} />
+      <HeroSection
+        isSplashActive={isSplashActive}
+        onEnquireClick={scrollToEnquiry}
+        onHeroImageReady={() => setIsHeroImageReady(true)}
+      />
 
       {/* Section 2: Filterable Collections Portfolio */}
       <CollectionsSection onSelectCollection={handleCollectionClick} />

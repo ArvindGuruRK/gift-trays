@@ -111,6 +111,7 @@ export function GSAPImageReveal({
   return (
     <div
       ref={containerRef}
+      data-gsap-reveal={direction}
       className={`relative overflow-hidden rounded-xl ${className}`}
     >
       {children}

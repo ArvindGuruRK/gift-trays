@@ -613,6 +613,39 @@ input[type="checkbox"]:not(.sr-only) {
   background-size: 24px 24px;
 }
 
+/* ── GSAP Reveal FOUC Guard ───────────────────────────────────────────────
+   useGSAPHeroSequence / useGSAPImageReveal set their "from" (hidden) state via
+   JS only, once GSAP runs on mount. On server-rendered HTML that JS hasn't run
+   yet, so these elements briefly paint in their final, fully-visible state,
+   then GSAP snaps them back to hidden and re-animates them in — a visible
+   flash/glitch that's most obvious whenever nothing else is covering the page
+   (e.g. a reload where the splash screen is skipped). Hiding them here in
+   plain CSS means the very first paint already matches GSAP's starting state,
+   so there is only ever one smooth reveal, never a flash-then-hide-then-show.
+   Gated on prefers-reduced-motion so those visitors — for whom the hooks
+   above deliberately never animate — still get the content immediately. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-logo],
+  [data-hero-eyebrow],
+  [data-hero-heading],
+  [data-hero-description],
+  [data-hero-cta],
+  [data-hero-bg],
+  [data-hero-motif] {
+    opacity: 0;
+  }
+
+  [data-gsap-reveal="up"] { clip-path: inset(100% 0% 0% 0%); }
+  [data-gsap-reveal="down"] { clip-path: inset(0% 0% 100% 0%); }
+  [data-gsap-reveal="left"] { clip-path: inset(0% 0% 0% 100%); }
+  [data-gsap-reveal="right"] { clip-path: inset(0% 100% 0% 0%); }
+  [data-gsap-reveal="scale"] img,
+  [data-gsap-reveal="scale"] svg,
+  [data-gsap-reveal="scale"] canvas {
+    opacity: 0;
+  }
+}
+
 /* Utility to hide scrollbars for clean touch/wheel horizontal scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
