@@ -46,9 +46,11 @@ export function Heading({
     dark: "text-primary-foreground",
   };
 
+  // Gold eyebrows need different tokens per ground to clear WCAG AA — the raw
+  // brand gold is only 2.89:1 on ivory and 3.66:1 on maroon. See globals.css.
   const themeEyebrowStyles = {
-    light: "text-accent",
-    dark: "text-accent",
+    light: "!text-accent-text",
+    dark: "!text-accent-on-dark",
   };
 
   const themeSubtitleStyles = {

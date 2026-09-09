@@ -627,7 +627,7 @@ export default function DesignSystemPage() {
               category="Wedding Special"
               trayCount={11}
               startingPrice="₹24,999"
-              imageUrl="/gallery/photos/wedding-seer-varisai-stage.jpeg"
+              imageUrl="/gallery/photos/wedding-seer-varisai-stage.webp"
               imageAlt="Royal Wedding Seer Varisai Trays"
               description="Complete traditional set featuring fresh fruit arrangements, dry fruits, sweets, coconuts, flowers, and silver/brass accessories."
               onEnquire={() => setIsModalOpen(true)}
@@ -638,8 +638,7 @@ export default function DesignSystemPage() {
               title="Engagement Thamboolam Collection"
               subtitle="Traditional Ceremonial"
               itemCount="14 Designs"
-              imageUrl="/gallery/photos/betel-leaf-peacock-rose-gift.jpeg"
-              imageAlt="Engagement Thamboolam Arrangements"
+              imageUrl="/gallery/photos/betel-leaf-peacock-rose-gift.webp"
               onClick={() => setIsModalOpen(true)}
             />
 
@@ -682,8 +681,8 @@ export default function DesignSystemPage() {
                 />
                 <Input
                   label="Phone Number (WhatsApp) *"
-                  placeholder="+91 98765 43210"
-                  defaultValue="+91 98765 43210"
+                  placeholder="+91 00000 00000"
+                  defaultValue="+91 00000 00000"
                 />
               </div>
 
@@ -1298,7 +1297,7 @@ export default function DesignSystemPage() {
 
                 <GSAPImageReveal direction="up" className="h-48 w-full">
                   <img
-                    src="/gallery/photos/daisy-mandala-tray-spread.jpeg"
+                    src="/gallery/photos/daisy-mandala-tray-spread.webp"
                     alt="GSAP Mask Reveal Demo"
                     className="w-full h-full object-cover"
                   />
@@ -1395,7 +1394,7 @@ export default function DesignSystemPage() {
             </Button>
 
             <a
-              href={`https://wa.me/919876543210?text=Hello%20Seer%20Varisai%20Thattu,%20I%20would%20like%20to%20enquire%20about%20${trayCount}%20trays%20for%20${selectedOccasion}.`}
+              href={`https://wa.me/910000000000?text=Hello%20Seer%20Varisai%20Thattu,%20I%20would%20like%20to%20enquire%20about%20${trayCount}%20trays%20for%20${selectedOccasion}.`}
               target="_blank"
               rel="noopener noreferrer"
             >

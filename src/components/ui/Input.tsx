@@ -1,4 +1,6 @@
-import React, { forwardRef } from "react";
+"use client";
+
+import React, { forwardRef, useId } from "react";
 import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -10,20 +12,39 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, hint, leftIcon, rightIcon, id, disabled, ...props }, ref) => {
-    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+  ({ className, label, error, hint, leftIcon, rightIcon, id, disabled, required, ...props }, ref) => {
+    // useId rather than deriving an id from the label text. The old scheme
+    // turned "Full Name *" into the id "full-name-*", and two fields sharing a
+    // label anywhere on the page produced duplicate ids, which breaks the
+    // label/input association screen readers rely on.
+    const generatedId = useId();
+    const inputId = id || generatedId;
+    const errorId = `${inputId}-error`;
+    const hintId = `${inputId}-hint`;
+
+    const describedBy = [error ? errorId : null, !error && hint ? hintId : null]
+      .filter(Boolean)
+      .join(" ");
 
     return (
       <div className="ui-field-group">
         {label && (
           <label htmlFor={inputId} className="ui-label flex items-center justify-between">
-            <span>{label}</span>
+            <span>
+              {label}
+              {required && (
+                <>
+                  <span aria-hidden="true" className="text-error"> *</span>
+                  <span className="sr-only"> (required)</span>
+                </>
+              )}
+            </span>
           </label>
         )}
 
         <div className="relative flex items-center w-full">
           {leftIcon && (
-            <div className="absolute left-3.5 text-muted-foreground pointer-events-none">
+            <div aria-hidden="true" className="absolute left-3.5 text-muted-foreground pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -32,6 +53,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             disabled={disabled}
+            required={required}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy || undefined}
             className={cn(
               "ui-input",
               "placeholder:text-muted-foreground/70",
@@ -45,16 +69,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
 
           {rightIcon && (
-            <div className="absolute right-3.5 text-muted-foreground pointer-events-none">
+            <div aria-hidden="true" className="absolute right-3.5 text-muted-foreground pointer-events-none">
               {rightIcon}
             </div>
           )}
         </div>
 
         {error ? (
-          <span className="text-xs text-error font-medium">{error}</span>
+          <span id={errorId} className="text-xs text-error font-medium">
+            {error}
+          </span>
         ) : hint ? (
-          <span className="text-xs text-muted-foreground">{hint}</span>
+          <span id={hintId} className="text-xs text-muted-foreground">
+            {hint}
+          </span>
         ) : null}
       </div>
     );

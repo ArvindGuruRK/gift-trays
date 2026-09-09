@@ -5,6 +5,5 @@ export * from "./CollectionsSection";
 export * from "./OccasionsSection";
 export * from "./HowItWorksSection";
 export * from "./GalleryPreviewSection";
-export * from "./TestimonialsSection";
 export * from "./InteractiveEnquirySection";
 export * from "./FinalCTASection";

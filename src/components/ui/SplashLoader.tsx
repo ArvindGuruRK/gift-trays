@@ -117,7 +117,7 @@ export function SplashLoader({
 
           {/* Eyebrow & Brand Title */}
           <div className="flex flex-col items-center gap-1.5 mb-6">
-            <div className="flex items-center gap-2 text-accent/80 text-[11px] sm:text-xs font-mono uppercase tracking-[0.3em]">
+            <div className="flex items-center gap-2 text-accent-on-dark text-[11px] sm:text-xs font-mono uppercase tracking-[0.3em]">
               <span className="w-8 h-[1px] bg-accent/40" />
               <span>HANDCRAFTED HERITAGE</span>
               <span className="w-8 h-[1px] bg-accent/40" />

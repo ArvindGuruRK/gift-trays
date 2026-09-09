@@ -43,15 +43,32 @@ export function LotusMotif({ className, size = 32, ...props }: MotifProps) {
   );
 }
 
-/** Kolam Corner Flourish Motif - Authentic Realistic South Indian Sikku / Pulli Kolam */
-export function KolamCornerFlourish({ className, size = 120 }: { className?: string; size?: number }) {
+/**
+ * Kolam corner flourish — a traditional South Indian sikku/pulli kolam.
+ *
+ * Purely decorative: it carries no information a screen reader needs, so it has
+ * an empty alt and is hidden from the accessibility tree by default. It also
+ * now forwards the rest of its props, which it did not before — aria-hidden
+ * passed by callers was being silently dropped.
+ */
+export function KolamCornerFlourish({
+  className,
+  size = 120,
+  ...props
+}: { className?: string; size?: number } & React.ImgHTMLAttributes<HTMLImageElement>) {
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- decorative background
+    // flourish positioned absolutely; next/image adds no value here.
     <img
-      src="/motifs/kolam_corner_flourish.png"
-      alt="Traditional South Indian Kolam Corner Flourish"
+      src="/motifs/kolam_corner_flourish.webp"
+      alt=""
+      aria-hidden="true"
       width={size}
       height={size}
+      loading="lazy"
+      decoding="async"
       className={cn("object-contain pointer-events-none drop-shadow-md", className)}
+      {...props}
     />
   );
 }

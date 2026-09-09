@@ -1,4 +1,6 @@
-import React, { forwardRef } from "react";
+"use client";
+
+import React, { forwardRef, useId } from "react";
 import { cn } from "@/lib/utils";
 
 export interface TextareaProps
@@ -9,14 +11,28 @@ export interface TextareaProps
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, label, error, hint, id, disabled, ...props }, ref) => {
-    const textareaId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+  ({ className, label, error, hint, id, disabled, required, ...props }, ref) => {
+    // See Input.tsx — ids come from useId, not from the label text.
+    const generatedId = useId();
+    const textareaId = id || generatedId;
+    const errorId = `${textareaId}-error`;
+    const hintId = `${textareaId}-hint`;
+
+    const describedBy = [error ? errorId : null, !error && hint ? hintId : null]
+      .filter(Boolean)
+      .join(" ");
 
     return (
       <div className="ui-field-group">
         {label && (
           <label htmlFor={textareaId} className="ui-label">
             {label}
+            {required && (
+              <>
+                <span aria-hidden="true" className="text-error"> *</span>
+                <span className="sr-only"> (required)</span>
+              </>
+            )}
           </label>
         )}
 
@@ -24,6 +40,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           disabled={disabled}
+          required={required}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy || undefined}
           className={cn(
             "ui-textarea",
             "placeholder:text-muted-foreground/70",
@@ -35,9 +54,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
 
         {error ? (
-          <span className="text-xs text-error font-medium">{error}</span>
+          <span id={errorId} className="text-xs text-error font-medium">
+            {error}
+          </span>
         ) : hint ? (
-          <span className="text-xs text-muted-foreground">{hint}</span>
+          <span id={hintId} className="text-xs text-muted-foreground">
+            {hint}
+          </span>
         ) : null}
       </div>
     );

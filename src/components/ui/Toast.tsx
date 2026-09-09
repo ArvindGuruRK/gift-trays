@@ -49,6 +49,11 @@ export function Toast({
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          // A confirmation nobody is told about is not a confirmation. role
+          // "status" with aria-live polite announces it without stealing focus.
+          role={type === "error" ? "alert" : "status"}
+          aria-live={type === "error" ? "assertive" : "polite"}
+          aria-atomic="true"
           initial={{ opacity: 0, y: 50, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -58,7 +63,7 @@ export function Toast({
             borderColors[type]
           )}
         >
-          {icons[type]}
+          <span aria-hidden="true">{icons[type]}</span>
 
           <div className="flex flex-col flex-1">
             <span className="font-sans font-semibold text-sm text-foreground">
@@ -74,8 +79,8 @@ export function Toast({
           <button
             type="button"
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-full hover:bg-secondary/60"
-            aria-label="Dismiss toast"
+            className="text-muted-foreground hover:text-foreground transition-colors w-11 h-11 flex items-center justify-center rounded-full hover:bg-secondary/60 shrink-0"
+            aria-label="Dismiss notification"
           >
             <X className="w-4 h-4" />
           </button>

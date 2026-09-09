@@ -37,7 +37,7 @@ export function TestimonialCard({
 
         <div className="relative">
           <p className="text-body text-foreground italic relative z-10 pl-4 border-l-2 border-accent/40 font-serif">
-            "{quote}"
+            &ldquo;{quote}&rdquo;
           </p>
         </div>
 

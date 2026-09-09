@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useId, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Check, Minus } from "lucide-react";
 
@@ -31,8 +31,10 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const internalRef = useRef<HTMLInputElement>(null);
     const resolvedRef = (ref || internalRef) as React.RefObject<HTMLInputElement | null>;
 
-    const checkboxId =
-      id || (typeof label === "string" ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+    // useId rather than a slug of the label text, which produced duplicate ids
+    // whenever two checkboxes shared a label. See Input.tsx.
+    const generatedId = useId();
+    const checkboxId = id || generatedId;
 
     useEffect(() => {
       if (resolvedRef.current) {

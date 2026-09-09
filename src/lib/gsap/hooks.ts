@@ -268,7 +268,7 @@ export function useGSAPImageReveal(options: UseGSAPImageRevealOptions = {}) {
       const mask = containerRef.current;
 
       let clipStart = "inset(100% 0% 0% 0%)";
-      let clipEnd = "inset(0% 0% 0% 0%)";
+      const clipEnd = "inset(0% 0% 0% 0%)";
 
       if (direction === "down") {
         clipStart = "inset(0% 0% 100% 0%)";

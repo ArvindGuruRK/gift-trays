@@ -9,38 +9,42 @@ import { motion } from "motion/react";
 import { fadeUp, staggerContainer, staggerItem } from "@/lib/animations";
 
 export function BrandIntroSection() {
+  // Each card describes what we do, not what we guarantee. The previous copy
+  // promised a "Freshness Guarantee", "Grade-A fruits" and "On-Time Delivery"
+  // as titled guarantees — absolute claims a new business cannot substantiate,
+  // and the kind of thing that makes a listing a misleading advertisement.
   const pillarCards = [
     {
       step: "01",
-      icon: <Sparkles className="w-5 h-5 text-accent" />,
+      icon: <Sparkles className="w-5 h-5 text-accent" aria-hidden="true" />,
       iconBg: "bg-accent/15 text-accent",
-      title: "Tailored Aesthetics",
+      title: "Tailored to Your Occasion",
       description:
-        "Custom color palettes, silk towel embroidery, and brass platter arrangements matched to your wedding attire and stage theme.",
+        "Colour palette, flowers and tray contents chosen with you, to suit your event, your attire and your stage décor.",
     },
     {
       step: "02",
-      icon: <Heart className="w-5 h-5 text-primary" />,
+      icon: <Heart className="w-5 h-5 text-primary" aria-hidden="true" />,
       iconBg: "bg-primary/15 text-primary",
-      title: "Freshness Guarantee",
+      title: "Fresh Flowers & Fruit",
       description:
-        "Fresh morning jasmine garlands, lotus blossoms, and Grade-A fruits handpicked on event day for vibrant visual presentation.",
+        "Flowers and fruit are bought close to your event date rather than held in stock, so the arrangement looks its best on the day.",
     },
     {
       step: "03",
-      icon: <ShieldCheck className="w-5 h-5 text-accent" />,
+      icon: <ShieldCheck className="w-5 h-5 text-accent" aria-hidden="true" />,
       iconBg: "bg-accent/15 text-accent",
-      title: "Budget Flexibility",
+      title: "Built Around Your Budget",
       description:
-        "From intimate 5-tray engagement sets to grand 21-tray wedding packages, customized according to your ceremonial budget.",
+        "From a 5-tray engagement set to a 21-tray wedding set. Tell us your budget and we will show you what it covers before you commit.",
     },
     {
       step: "04",
-      icon: <Star className="w-5 h-5 text-primary" />,
+      icon: <Star className="w-5 h-5 text-primary" aria-hidden="true" />,
       iconBg: "bg-primary/15 text-primary",
-      title: "On-Time Delivery",
+      title: "Delivered & Set Up",
       description:
-        "Direct safe transport and white-glove setup at wedding halls (Kalyana Mandapams) and ceremonial venues prior to rituals.",
+        "We bring the trays to your hall or venue and arrange them there, at a time agreed with you in advance.",
     },
   ];
 
@@ -55,9 +59,9 @@ export function BrandIntroSection() {
           viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
         >
           <Heading
-            eyebrow="Our Story &amp; Heritage"
-            title="Artisanal Ceremonial Plating &amp; Presentation"
-            subtitle="Mastering the fine art of packed Seer Varisai Thattu plating, sacred wedding gestures, and opulent traditional gift presentation for grand wedding ceremonies."
+            eyebrow="How We Work"
+            title="Ceremonial Trays, Arranged for Your Occasion"
+            subtitle="Seer Varisai Thattu arrangements put together around your occasion, your tray count and your budget — and delivered to your venue."
             align="center"
             hasDivider
           />
@@ -75,15 +79,15 @@ export function BrandIntroSection() {
           >
             <div className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-warm-sm hover:shadow-warm-md hover:border-accent/40 flex flex-col justify-center h-full relative overflow-hidden gap-4 transition-shadow transition-colors duration-300">
               <h3 className="text-h3 font-serif font-medium text-foreground leading-snug">
-                Preserving Sacred Traditions with Modern Luxury Elegance
+                A Tradition Worth Getting Right
               </h3>
 
               <p className="text-body-sm text-muted-foreground font-sans leading-relaxed">
-                In sacred wedding ceremonies and milestone celebrations, <strong>Seer Varisai Thattu</strong> represents honor, deep reverence, and auspicious blessings exchanged between joining families.
+                In weddings and milestone ceremonies, <strong>Seer Varisai Thattu</strong> carries real meaning — it is how respect and blessings are offered between the two families taking part.
               </p>
 
               <p className="text-body-sm text-muted-foreground font-sans leading-relaxed">
-                We handle every arrangement with extreme precision—handpicking fresh morning jasmine, lotus, and roses, pairing rich traditional ghee sweets and exotic fruits in flawless stacked pyramids, and decorating brass platters with regal color themes to match your ceremonial mandapam.
+                That is worth arranging carefully. We work through the tray contents with you, source the flowers, fruit and sweets close to your event date, and set the trays out so they look right on the stage and in your photographs.
               </p>
             </div>
           </motion.div>
@@ -107,7 +111,9 @@ export function BrandIntroSection() {
                     <div className={`w-11 h-11 rounded-xl ${card.iconBg} flex items-center justify-center shrink-0`}>
                       {card.icon}
                     </div>
-                    <span className="text-xs font-mono font-semibold text-accent/70 tracking-wider">
+                    {/* The step number is content, so it needs the readable
+                        gold at full opacity — text-accent/70 was 2.07:1. */}
+                    <span className="text-xs font-mono font-semibold text-accent-text tracking-wider">
                       {card.step}
                     </span>
                   </div>
