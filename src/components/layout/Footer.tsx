@@ -2,8 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { DiyaLogo } from "@/components/ui/DiyaLogo";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { CopyrightYear } from "@/components/layout/CopyrightYear";
-import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import {
   BUSINESS,
   telHref,
@@ -86,10 +87,10 @@ export function Footer() {
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-full bg-[#25D366] text-[#14261B] flex items-center justify-center hover:opacity-90 transition-opacity"
+                className="w-11 h-11 rounded-full bg-secondary text-secondary-foreground border border-border flex items-center justify-center hover:bg-secondary-hover transition-colors"
                 aria-label={`Message ${BUSINESS.displayName} on WhatsApp (opens in a new tab)`}
               >
-                <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                <WhatsAppLogo size={22} />
               </a>
               <a
                 href={telHref}

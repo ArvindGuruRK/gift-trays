@@ -446,20 +446,12 @@ html.lenis.lenis-smooth [data-lenis-prevent] {
 }
 
 /*
- * WhatsApp green keeps its brand value, but white-on-#25D366 is only 1.98:1 —
- * a clear WCAG failure. Dark text on the same green is 7.94:1, so the brand
- * colour survives and the label becomes readable. (Keeping white would have
- * meant darkening to ~#0F7A6C, which no longer reads as WhatsApp.)
+ * There is deliberately no WhatsApp-green button. WhatsApp actions use the
+ * Secondary Sand variant with the WhatsApp logo (WhatsAppLogo) as the icon: the
+ * logo makes the action recognisable, and sand reads on both the maroon
+ * sections (beside the gold primary CTA) and the light ones, where a green
+ * background clashed with the maroon/gold/ivory palette.
  */
-.ui-btn-whatsapp {
-  background-color: #25D366;
-  color: #14261B;
-  box-shadow: var(--shadow-warm-sm);
-}
-.ui-btn-whatsapp:hover {
-  background-color: #1EBE5A;
-  box-shadow: var(--shadow-warm-md);
-}
 
 /* Badge Component Classes */
 .ui-badge {

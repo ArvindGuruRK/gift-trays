@@ -26,11 +26,12 @@ import { Drawer } from "@/components/ui/Drawer";
 import { OrnamentalDivider } from "@/components/ui/OrnamentalDivider";
 import { LotusMotif, KolamCornerFlourish, ThattuIcon } from "@/components/ui/Motifs";
 import { DiyaLogo } from "@/components/ui/DiyaLogo";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { SplashLoader } from "@/components/ui/SplashLoader";
 import { COLOR_TOKENS, COLOR_USAGE_RATIOS, TYPOGRAPHY_TOKENS, SPACING_SCALE } from "@/lib/tokens";
 import { motion } from "motion/react";
 import { fadeUp, staggerContainer, staggerItem, typographyRow, typographyContainer, typographyItem, eyebrowReveal, metaFade } from "@/lib/animations";
-import { Sparkles, CheckCircle, Send, Heart, Eye, ArrowRight, ShieldCheck, Bell, SlidersHorizontal, Play, Film, Layers, Sliders } from "lucide-react";
+import { Sparkles, CheckCircle, Heart, Eye, ArrowRight, ShieldCheck, Bell, SlidersHorizontal, Play, Film, Layers, Sliders } from "lucide-react";
 import { useLenis } from "lenis/react";
 import {
   GSAPHeroIntro,
@@ -562,10 +563,10 @@ export default function DesignSystemPage() {
 
               <div className="flex flex-col gap-3">
                 <span className="text-xs font-semibold uppercase text-accent">
-                  WhatsApp Direct CTA
+                  WhatsApp CTA — Sand + Logo
                 </span>
-                <Button variant="whatsapp">Quick WhatsApp</Button>
-                <Button variant="whatsapp" leftIcon={<Send className="w-4 h-4" />}>
+                <Button variant="secondary" leftIcon={<WhatsAppLogo size={20} />}>Quick WhatsApp</Button>
+                <Button variant="secondary" size="sm" leftIcon={<WhatsAppLogo size={18} />}>
                   Chat on WhatsApp
                 </Button>
               </div>
@@ -1404,7 +1405,7 @@ export default function DesignSystemPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button variant="whatsapp" size="sm" leftIcon={<Send className="w-4 h-4" />}>
+              <Button variant="secondary" size="sm" leftIcon={<WhatsAppLogo size={18} />}>
                 Send to WhatsApp
               </Button>
             </a>

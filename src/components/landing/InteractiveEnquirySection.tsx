@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useId, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -13,6 +12,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { RadioGroup } from "@/components/ui/RadioGroup";
 import { NumberSelector } from "@/components/ui/NumberSelector";
 import { Button } from "@/components/ui/Button";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { GSAPTextReveal } from "@/components/animations";
 import { Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { BUSINESS, whatsappHref } from "@/lib/business";
@@ -292,18 +292,9 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
               >
                 <Button
                   type="button"
-                  variant="whatsapp"
+                  variant="secondary"
                   size="lg"
-                  leftIcon={
-                    <Image
-                      src="/icons/whatsapp.svg"
-                      alt=""
-                      aria-hidden="true"
-                      width={20}
-                      height={20}
-                      className="w-5 h-5 shrink-0"
-                    />
-                  }
+                  leftIcon={<WhatsAppLogo size={20} />}
                 >
                   Message Us Directly
                 </Button>

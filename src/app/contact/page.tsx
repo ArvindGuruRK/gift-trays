@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Button } from "@/components/ui/Button";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { pageMetadata, breadcrumbJsonLd, localBusinessJsonLd } from "@/lib/seo";
 import {
@@ -16,7 +17,7 @@ import {
   mapsHref,
   publicEmail,
 } from "@/lib/business";
-import { Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
+import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
@@ -59,9 +60,9 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   <span
                     aria-hidden="true"
-                    className="w-11 h-11 rounded-xl bg-[#25D366]/15 text-[#14261B] flex items-center justify-center shrink-0"
+                    className="w-11 h-11 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center shrink-0"
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <WhatsAppLogo size={24} />
                   </span>
                   <h2 className="font-serif text-xl font-semibold text-foreground">WhatsApp</h2>
                 </div>
@@ -79,9 +80,9 @@ export default function ContactPage() {
                   aria-label="Message us on WhatsApp (opens in a new tab)"
                 >
                   <Button
-                    variant="whatsapp"
+                    variant="secondary"
                     fullWidth
-                    leftIcon={<MessageCircle className="w-4 h-4" aria-hidden="true" />}
+                    leftIcon={<WhatsAppLogo size={18} />}
                   >
                     Message on WhatsApp
                   </Button>

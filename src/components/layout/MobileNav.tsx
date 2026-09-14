@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { drawerVariants, staggerContainer, staggerItem } from "@/lib/animations";
 import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { Button } from "@/components/ui/Button";
-import { X, Sparkles, Phone, MessageCircle } from "lucide-react";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
+import { X, Sparkles, Phone } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { BUSINESS, telHref, whatsappHref } from "@/lib/business";
 
@@ -183,10 +184,10 @@ export function MobileNav({ isOpen, onClose, links, currentPath }: MobileNavProp
                   aria-label="Message us on WhatsApp (opens in a new tab)"
                 >
                   <Button
-                    variant="whatsapp"
+                    variant="secondary"
                     size="sm"
                     fullWidth
-                    leftIcon={<MessageCircle className="w-4 h-4" aria-hidden="true" />}
+                    leftIcon={<WhatsAppLogo size={18} />}
                   >
                     WhatsApp
                   </Button>

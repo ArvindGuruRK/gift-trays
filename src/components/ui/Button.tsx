@@ -12,8 +12,7 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children">
     | "accent"
     | "outline"
     | "ghost"
-    | "text"
-    | "whatsapp";
+    | "text";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -47,7 +46,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       outline: "ui-btn-outline",
       ghost: "ui-btn-ghost",
       text: "ui-btn-text",
-      whatsapp: "ui-btn-whatsapp",
     };
 
     const sizes = {

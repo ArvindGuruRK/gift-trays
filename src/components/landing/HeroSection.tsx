@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { KolamCornerFlourish } from "@/components/ui/Motifs";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import {
   GSAPHeroIntro,
   GSAPParallax,
@@ -81,18 +82,9 @@ export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps
                     aria-label="Enquire on WhatsApp (opens in a new tab)"
                   >
                     <Button
-                      variant="whatsapp"
+                      variant="secondary"
                       size="lg"
-                      leftIcon={
-                        <Image
-                          src="/icons/whatsapp.svg"
-                          alt=""
-                          aria-hidden="true"
-                          width={20}
-                          height={20}
-                          className="w-5 h-5 shrink-0"
-                        />
-                      }
+                      leftIcon={<WhatsAppLogo size={20} />}
                     >
                       Instant WhatsApp Enquiry
                     </Button>

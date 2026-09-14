@@ -46,6 +46,8 @@ const t = {
   primary: token(css, "primary"),
   primaryForeground: token(css, "primary-foreground"),
   secondary: token(css, "secondary"),
+  secondaryForeground: token(css, "secondary-foreground"),
+  secondaryHover: token(css, "secondary-hover"),
   accentText: token(css, "accent-text"),
   accentOnDark: token(css, "accent-on-dark"),
   accentForeground: token(css, "accent-foreground"),
@@ -83,8 +85,9 @@ const CHECKS = [
   ["success text on card", t.success, t.card, AA_NORMAL],
   ["error text on card", t.error, t.card, AA_NORMAL],
 
-  // WhatsApp button: brand green kept, label darkened.
-  ["WhatsApp label on brand green", "#14261B", "#25D366", AA_NORMAL],
+  // Secondary Sand buttons, which also carry every WhatsApp action.
+  ["button label on secondary (sand)", t.secondaryForeground, t.secondary, AA_NORMAL],
+  ["button label on secondary hover", t.secondaryForeground, t.secondaryHover, AA_NORMAL],
 
   // Non-text: the decorative gold only ever needs to be distinguishable.
   ["decorative gold on card (non-text)", t.accent, t.card, AA_LARGE],

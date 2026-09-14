@@ -5,7 +5,8 @@ import { SplashLoader } from "@/components/ui/SplashLoader";
 import { Modal } from "@/components/ui/Modal";
 import { Toast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
-import { CheckCircle, Send } from "lucide-react";
+import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
+import { CheckCircle } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { BUSINESS, whatsappHref } from "@/lib/business";
 
@@ -122,7 +123,7 @@ export function HomePageClient() {
               rel="noopener noreferrer"
               aria-label="Ask about this on WhatsApp (opens in a new tab)"
             >
-              <Button variant="whatsapp" size="sm" leftIcon={<Send className="w-4 h-4" aria-hidden="true" />}>
+              <Button variant="secondary" size="sm" leftIcon={<WhatsAppLogo size={18} />}>
                 Ask on WhatsApp
               </Button>
             </a>
