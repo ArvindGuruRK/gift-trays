@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
-import { ImageFrame } from "@/components/ui/ImageFrame";
-import { GSAPTextReveal, GSAPPageEmerge } from "@/components/animations";
-import { Eye } from "lucide-react";
+import { CollectionCard } from "@/components/ui/CollectionCard";
+import { FilterTabs, type FilterTab } from "@/components/ui/FilterTabs";
+import { GSAPTextReveal, GSAPImageReveal, GSAPPageEmerge } from "@/components/animations";
+import { motion, AnimatePresence } from "motion/react";
+import { fadeUp } from "@/lib/animations";
 
 interface GalleryItem {
   id: string;
@@ -194,6 +196,25 @@ const GALLERY_ITEMS: GalleryItem[] = [
   }
 ];
 
+/** Eyebrow shown on each card, matching the filter it belongs to. */
+const OCCASION_LABELS: Record<string, string> = {
+  wedding: "Wedding",
+  engagement: "Engagement",
+  seemantham: "Seemantham",
+  housewarming: "Housewarming",
+  custom: "Custom Theme",
+};
+
+const GALLERY_TABS: FilterTab[] = [
+  { id: "all", label: "All Photos" },
+  { id: "wedding", label: "Weddings" },
+  { id: "engagement", label: "Engagements" },
+  { id: "seemantham", label: "Seemantham" },
+  { id: "housewarming", label: "Housewarming" },
+  // Without this tab the custom-theme photos could only be reached via "All".
+  { id: "custom", label: "Custom Theme" },
+];
+
 interface GalleryPreviewSectionProps {
   onImageClick?: (item: GalleryItem) => void;
 }
@@ -209,8 +230,7 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
     // Whole section — background included — rises and fades in as one panel
     // as it enters view, right after the "How We Craft" horizontal track
     // releases its pin, rather than just the text/photos floating in over a
-    // static backdrop. The grid below is marked data-emerge-deep so it
-    // settles a beat behind the heading, giving the reveal real parallax depth.
+    // static backdrop.
     <GSAPPageEmerge>
       <Section id="gallery" theme="ivory" padding="lg">
         <Container size="xl">
@@ -224,79 +244,47 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
             />
           </GSAPTextReveal>
 
-          {/* Gallery Filter Buttons */}
-          <div
-            className="flex items-center justify-center gap-2 flex-wrap mt-8 mb-10"
-            role="group"
-            aria-label="Filter photographs by occasion"
-          >
-            {[
-              { id: "all", label: "All Photos" },
-              { id: "wedding", label: "Weddings" },
-              { id: "engagement", label: "Engagements" },
-              { id: "seemantham", label: "Seemantham" },
-              { id: "housewarming", label: "Housewarming" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                aria-pressed={activeTab === tab.id}
-                className={`px-4 py-2 rounded-full text-xs font-sans font-semibold transition-all cursor-pointer ${
-                  activeTab === tab.id
-                    ? "bg-primary text-primary-foreground shadow-warm-sm"
-                    : "bg-card text-foreground/80 border border-border hover:bg-secondary"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <FilterTabs
+            tabs={GALLERY_TABS}
+            activeId={activeTab}
+            onChange={setActiveTab}
+            ariaLabel="Filter photographs by occasion"
+          />
 
           <p aria-live="polite" className="sr-only">
             Showing {filteredItems.length} photograph
             {filteredItems.length === 1 ? "" : "s"}.
           </p>
 
-          {/* Photo Grid */}
-          <div data-emerge-deep className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-              /*
-                A real <button>. As clickable <div>s these gallery tiles were
-                unreachable by keyboard and announced nothing to a screen reader.
-              */
-              <button
-                key={item.id}
-                type="button"
-                aria-label={`${item.title} — ${item.location}. Open enquiry.`}
-                className="ui-card-button group rounded-xl overflow-hidden border border-border bg-card shadow-warm-sm hover:shadow-warm-lg transition-all"
-                onClick={() => onImageClick?.(item)}
-              >
-                <div className="relative overflow-hidden">
-                  <ImageFrame
-                    src={item.imageUrl}
-                    alt=""
-                    aspectRatio="4/3"
-                    className="group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div aria-hidden="true" className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-10 h-10 rounded-full bg-card/90 text-primary flex items-center justify-center shadow-warm-md">
-                      <Eye className="w-5 h-5 text-accent" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 flex flex-col gap-1 text-left">
-                  <span className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {item.title}
-                  </span>
-                  <span className="text-xs text-muted-foreground font-sans">
-                    {item.location}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
+          {/*
+            Same card, curtain-mask reveal and animated filtering as the
+            Collections section, so the two photo grids read as one design.
+          */}
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  transition={{ duration: 0.3 }}
+                >
+                  <GSAPImageReveal direction="up" start="top 85%">
+                    <CollectionCard
+                      title={item.title}
+                      subtitle={OCCASION_LABELS[item.category]}
+                      imageUrl={item.imageUrl}
+                      ariaLabel={`${item.title} — ${item.location}. Enquire about this arrangement.`}
+                      onClick={() => onImageClick?.(item)}
+                    />
+                  </GSAPImageReveal>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </Container>
       </Section>
     </GSAPPageEmerge>

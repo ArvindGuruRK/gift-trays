@@ -33,6 +33,17 @@ export const NAV_LINKS = [
 /** Where every "Enquire" call to action points. */
 export const ENQUIRY_HREF = "/#enquiry-form";
 
+/*
+ * Scroll offsets at which the header compacts and expands again. They must be
+ * further apart than the height the header loses when it compacts (py-5 -> py-3,
+ * about 16px). With a single threshold, compacting shrinks the sticky header,
+ * the browser's scroll anchoring pulls scrollY back under the threshold, the
+ * header expands, anchoring pushes scrollY over it again — and the header
+ * flickered between states every frame while the page sat near the top.
+ */
+const COMPACT_AFTER = 48;
+const EXPAND_BELOW = 8;
+
 export function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,7 +51,10 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const y = window.scrollY;
+      setIsScrolled((wasScrolled) =>
+        wasScrolled ? y > EXPAND_BELOW : y > COMPACT_AFTER
+      );
     };
 
     handleScroll();

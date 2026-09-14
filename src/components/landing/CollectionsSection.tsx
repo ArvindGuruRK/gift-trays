@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { CollectionCard } from "@/components/ui/CollectionCard";
+import { FilterTabs, type FilterTab } from "@/components/ui/FilterTabs";
 import { GSAPTextReveal, GSAPImageReveal } from "@/components/animations";
 import { motion, AnimatePresence } from "motion/react";
 import { fadeUp } from "@/lib/animations";
@@ -83,6 +84,15 @@ const COLLECTIONS_DATA: CollectionItem[] = [
   }
 ];
 
+const COLLECTION_TABS: FilterTab[] = [
+  { id: "all", label: "All Collections" },
+  { id: "wedding", label: "Wedding Seer" },
+  { id: "engagement", label: "Engagement" },
+  { id: "seemantham", label: "Seemantham" },
+  { id: "housewarming", label: "Housewarming" },
+  { id: "custom", label: "Custom Theme" },
+];
+
 interface CollectionsSectionProps {
   onSelectCollection?: (collection: CollectionItem) => void;
   isSplashActive?: boolean;
@@ -109,36 +119,12 @@ export function CollectionsSection({ onSelectCollection, isSplashActive }: Colle
         </GSAPTextReveal>
 
         {/* Category Tabs */}
-        <div
-          className="flex items-center justify-center gap-2 flex-wrap mt-8 mb-10"
-          role="group"
-          aria-label="Filter collections by occasion"
-        >
-          {[
-            { id: "all", label: "All Collections" },
-            { id: "wedding", label: "Wedding Seer" },
-            { id: "engagement", label: "Engagement" },
-            { id: "seemantham", label: "Seemantham" },
-            { id: "housewarming", label: "Housewarming" },
-            { id: "custom", label: "Custom Theme" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveCategory(tab.id)}
-              // aria-pressed is what tells a screen reader which filter is
-              // active; the colour change alone conveys nothing.
-              aria-pressed={activeCategory === tab.id}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-sans font-semibold transition-all cursor-pointer ${
-                activeCategory === tab.id
-                  ? "bg-primary text-primary-foreground shadow-warm-sm"
-                  : "bg-card text-foreground/80 border border-border hover:bg-secondary"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <FilterTabs
+          tabs={COLLECTION_TABS}
+          activeId={activeCategory}
+          onChange={setActiveCategory}
+          ariaLabel="Filter collections by occasion"
+        />
 
         {/* Filter changes are announced, since the grid below updates silently. */}
         <p aria-live="polite" className="sr-only">

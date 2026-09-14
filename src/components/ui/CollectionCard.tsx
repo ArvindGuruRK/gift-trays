@@ -11,6 +11,8 @@ export interface CollectionCardProps {
   subtitle?: string;
   itemCount?: string;
   imageUrl: string;
+  /** Overrides the accessible name, which otherwise describes a collection. */
+  ariaLabel?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -20,6 +22,7 @@ export function CollectionCard({
   subtitle,
   itemCount,
   imageUrl,
+  ariaLabel,
   onClick,
   className,
 }: CollectionCardProps) {
@@ -32,7 +35,10 @@ export function CollectionCard({
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
-      aria-label={`${title}${subtitle ? ` — ${subtitle}` : ""}${itemCount ? `, ${itemCount}` : ""}. Enquire about this collection.`}
+      aria-label={
+        ariaLabel ??
+        `${title}${subtitle ? ` — ${subtitle}` : ""}${itemCount ? `, ${itemCount}` : ""}. Enquire about this collection.`
+      }
       className={cn(
         "ui-card-button relative group h-[380px] w-full overflow-hidden rounded-xl border border-border shadow-warm-sm select-none",
         className
@@ -69,6 +75,18 @@ export function CollectionCard({
       >
         <ArrowUpRight className="w-5 h-5" />
       </div>
+
+      {/*
+        Keyboard focus ring, drawn inside the card above the photo. The card
+        normally sits in GSAPImageReveal, whose overflow/clip-path mask cuts off
+        anything outside the card — including the global focus outline, which
+        left keyboard users with no visible focus at all. Two tones so it reads
+        on both light and dark photographs.
+      */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-20 rounded-xl opacity-0 group-focus-visible:opacity-100 shadow-[inset_0_0_0_3px_var(--accent-on-dark),inset_0_0_0_5px_var(--primary)]"
+      />
 
       {/* Content at bottom — sits over a dark gradient, so it uses the lighter
           gold token rather than the brand gold. */}

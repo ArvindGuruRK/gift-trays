@@ -703,24 +703,36 @@ input[type="checkbox"]:not(.sr-only) {
 /*
  * Baseline visible focus indicator. Several controls previously relied on the
  * browser default, which the custom backgrounds made nearly invisible.
+ *
+ * No border-radius here: the outline already follows the element's own
+ * corners, and setting one squared off every rounded card and pill on focus.
  */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 2px;
-  border-radius: 0.25rem;
 }
 
-/* Interactive card surfaces: reset the UA button styling without losing focus. */
-.ui-card-button {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  cursor: pointer;
+/*
+ * Interactive card surfaces: a <button> that should look like a card.
+ *
+ * This must stay inside @layer components. Everything unlayered in this file
+ * beats Tailwind's utilities regardless of specificity, so as an unlayered rule
+ * its padding/border/background reset silently overrode the card's own
+ * `p-8 bg-card border flex` classes — cards rendered with no padding, surface or
+ * border. In the components layer the utilities on the element win, as intended.
+ */
+@layer components {
+  .ui-card-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
 }
 
 /*

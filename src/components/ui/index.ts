@@ -6,6 +6,7 @@ export * from "./Heading";
 export * from "./Badge";
 export * from "./ProductCard";
 export * from "./CollectionCard";
+export * from "./FilterTabs";
 export * from "./TestimonialCard";
 export * from "./ImageFrame";
 export * from "./Input";

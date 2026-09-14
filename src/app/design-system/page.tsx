@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
@@ -42,13 +42,19 @@ import {
 } from "@/components/animations";
 
 export default function DesignSystemPage() {
-  const [scrollY, setScrollY] = useState<number>(0);
-  const lenis = useLenis((lenisInstance) => {
-    if (lenisInstance?.scroll !== undefined) {
-      const val = Math.round(lenisInstance.scroll);
-      setScrollY((prev) => (prev !== val ? val : prev));
+  // The live scroll readout is written straight to the DOM rather than held in
+  // state. As state, every Lenis frame re-rendered this whole page, and because
+  // the callback was a new function each render, useLenis re-subscribed and
+  // called it again from inside its effect — a setState-in-effect chain that
+  // ran for as long as the page was scrolling ("Maximum update depth exceeded").
+  // A stable callback plus a ref keeps the readout live with no React updates.
+  const scrollReadoutRef = useRef<HTMLElement>(null);
+  const updateScrollReadout = useCallback((lenisInstance: { scroll: number }) => {
+    if (scrollReadoutRef.current) {
+      scrollReadoutRef.current.textContent = `${Math.round(lenisInstance.scroll)} px`;
     }
-  });
+  }, []);
+  const lenis = useLenis(updateScrollReadout);
 
   // Motion Demo Replay State
   const [fadeUpKey, setFadeUpKey] = useState<number>(0);
@@ -1100,7 +1106,7 @@ export default function DesignSystemPage() {
               <div className="bg-secondary/40 p-4 rounded-xl border border-border/60 min-h-[140px] flex flex-col justify-between">
                 <div className="flex items-center justify-between border-b border-border/50 pb-2 text-xs">
                   <span className="text-muted-foreground font-sans">Live Scroll Position Y:</span>
-                  <code className="font-mono font-bold text-primary text-sm">{scrollY} px</code>
+                  <code ref={scrollReadoutRef} className="font-mono font-bold text-primary text-sm">0 px</code>
                 </div>
 
                 <div className="flex items-center justify-between text-xs pt-1">
