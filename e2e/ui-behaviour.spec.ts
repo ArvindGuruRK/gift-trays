@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 
 /**
  * Regression guards for interface behaviour that looks fine in a static
- * screenshot but breaks in use: WhatsApp buttons staying on-brand.
+ * screenshot but breaks in use: WhatsApp buttons staying on-brand, and the
+ * back-to-top control.
  */
 
 test.describe("WhatsApp actions", () => {
@@ -28,5 +29,26 @@ test.describe("WhatsApp actions", () => {
         expect(link.backgrounds, `"${link.label}" on ${route} uses a WhatsApp-green background`).not.toContain(WHATSAPP_GREEN);
       }
     }
+  });
+});
+
+test.describe("Back to top", () => {
+  test("appears after scrolling, returns to the top, and hands keyboard focus back", async ({ page }) => {
+    await page.goto("/about", { waitUntil: "domcontentloaded" });
+    await page.waitForLoadState("networkidle").catch(() => {});
+
+    const button = page.getByRole("button", { name: "Back to top" });
+    // Hidden with visibility at the top, so it can't be tabbed to or announced.
+    await expect(button).toBeHidden();
+
+    await page.mouse.wheel(0, 2500);
+    await expect(button).toBeVisible();
+
+    // Keyboard activation: back to the top, and focus to the first control.
+    await button.focus();
+    await page.keyboard.press("Enter");
+    await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 5000 }).toBe(0);
+    await expect(button).toBeHidden();
+    await expect(page.locator(":focus")).toHaveAttribute("href", "#main-content");
   });
 });

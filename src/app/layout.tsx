@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
+import { BackToTop } from "@/components/layout/BackToTop";
 import { BUSINESS, resolvedSiteUrl, assertBusinessConfigured } from "@/lib/business";
 import "./globals.css";
 
@@ -93,7 +94,11 @@ export default function RootLayout({
       className={`${cormorant.variable} ${manrope.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-accent/20 selection:text-primary">
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <SmoothScrollProvider>
+          {children}
+          {/* After the page content, so it never precedes the skip link in tab order. */}
+          <BackToTop />
+        </SmoothScrollProvider>
       </body>
     </html>
   );
