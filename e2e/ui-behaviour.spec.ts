@@ -62,8 +62,9 @@ test.describe("Splash screen", () => {
     // First visit of the session: the brand splash runs.
     await expect(page.locator(splash)).toBeVisible();
 
-    // It lifts on readiness, capped at 2.4s + the exit fade.
-    await page.locator(splash).waitFor({ state: "detached", timeout: 6000 });
+    // The splash is gated on hydration, which on a dev server shared with
+    // other workers can run well past its own timings — allow for that.
+    await page.locator(splash).waitFor({ state: "detached", timeout: 15000 });
 
     // Leave and come back — this is the bug: the splash used to replay here.
     await page.goto("/contact", { waitUntil: "domcontentloaded" });

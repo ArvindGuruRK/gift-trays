@@ -14,12 +14,24 @@ import AxeBuilder from "@axe-core/playwright";
 const ROUTES = [
   "/",
   "/about",
+  "/gallery",
   "/contact",
   "/privacy-policy",
   "/terms",
   "/cookie-policy",
   "/refund-policy",
 ];
+
+/*
+ * Most tests in this file visit every route in turn, so their time budget has
+ * to grow with the route list. A fixed 30s default passed at seven routes and
+ * started timing out the moment an eighth (the image-heavy /gallery) was added
+ * — under full local parallelism the failures were all timeouts, never a failed
+ * assertion. Scaling here stops the next new page breaking the suite the same way.
+ */
+test.beforeEach(({}, testInfo) => {
+  testInfo.setTimeout(Math.max(30_000, ROUTES.length * 12_000));
+});
 
 /** Hosts the site is allowed to talk to. Anything else is a tracker or an embed. */
 const ALLOWED_HOSTS = ["localhost", "127.0.0.1", "res.cloudinary.com"];

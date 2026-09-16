@@ -1,210 +1,31 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { CollectionCard } from "@/components/ui/CollectionCard";
 import { FilterTabs, type FilterTab } from "@/components/ui/FilterTabs";
+import { Button } from "@/components/ui/Button";
 import { GSAPTextReveal, GSAPImageReveal, GSAPPageEmerge } from "@/components/animations";
 import { motion, AnimatePresence } from "motion/react";
 import { fadeUp } from "@/lib/animations";
+import {
+  FEATURED_GALLERY_ITEMS,
+  GALLERY_ITEMS,
+  OCCASION_LABELS,
+  type GalleryItem,
+} from "@/lib/gallery";
+import { ArrowRight } from "lucide-react";
 
-interface GalleryItem {
-  id: string;
-  category: string;
-  title: string;
-  /**
-   * What the photograph actually shows. This used to hold invented venue names
-   * ("Imperial Mandapam Shrine", "Destination Wedding Resort") attached to real
-   * photos — the same misrepresentation as the fake reviews, in miniature.
-   * Keep these factual: describe the arrangement, don't name a venue.
-   */
-  location: string;
-  imageUrl: string;
-  imageAlt: string;
-}
-
-const GALLERY_ITEMS: GalleryItem[] = [
-  {
-    id: "g1",
-    category: "wedding",
-    title: "15-Tray Fruit & Sweet Arrangement",
-    location: "Fruit and sweet trays, gold mandala setting",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-1.webp",
-    imageAlt: "15-Tray Fruit & Sweet Arrangement"
-  },
-  {
-    id: "g2",
-    category: "engagement",
-    title: "Nitchayathartham Betel & Jasmine Set",
-    location: "Betel leaf and floral tray arrangement",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-2.webp",
-    imageAlt: "Nitchayathartham Betel & Jasmine Set"
-  },
-  {
-    id: "g3",
-    category: "seemantham",
-    title: "Seemantham Bangles & Lotus Tray",
-    location: "Bangles and lotus tray arrangement",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-3.webp",
-    imageAlt: "Seemantham Bangles & Lotus Tray"
-  },
-  {
-    id: "g4",
-    category: "wedding",
-    title: "Brass Kuthuvilakku Lamp Platter",
-    location: "Brass lamp and platter arrangement",
-    imageUrl: "/gallery/photos/gold-tray-flower-mandala-closeup-4.webp",
-    imageAlt: "Brass Kuthuvilakku Lamp Platter"
-  },
-  {
-    id: "g5",
-    category: "housewarming",
-    title: "Grahapravesam Banana Flower Thamboolam",
-    location: "Banana flower and thamboolam set",
-    imageUrl: "/gallery/photos/pink-ribbon-daisy-mandala-spread-2.webp",
-    imageAlt: "Grahapravesam Banana Flower Thamboolam"
-  },
-  {
-    id: "g6",
-    category: "custom",
-    title: "Lotus & Dry Fruit Pyramid Basket",
-    location: "Lotus and dry fruit tray arrangement",
-    imageUrl: "/gallery/photos/daisy-mandala-grand-spread-2.webp",
-    imageAlt: "Lotus & Dry Fruit Pyramid Basket"
-  },
-  {
-    id: "g7",
-    category: "wedding",
-    title: "Assorted Fruit & Snack Tray Set",
-    location: "Assorted fruit and snack trays",
-    imageUrl: "/gallery/photos/assorted-fruit-snack-trays.webp",
-    imageAlt: "Assorted Fruit & Snack Tray Set"
-  },
-  {
-    id: "g8",
-    category: "custom",
-    title: "Eleven-Tray Fruit & Nut Assortment",
-    location: "Eleven-tray fruit and nut set",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-nut-closeup.webp",
-    imageAlt: "Eleven-Tray Fruit & Nut Assortment"
-  },
-  {
-    id: "g9",
-    category: "engagement",
-    title: "Fruit & Sweets Tray Grid",
-    location: "Fruit and sweets tray grid",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-1.webp",
-    imageAlt: "Fruit & Sweets Tray Grid"
-  },
-  {
-    id: "g10",
-    category: "seemantham",
-    title: "Fruit & Sweets Tray Grid",
-    location: "Fruit and sweets tray grid",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-2.webp",
-    imageAlt: "Fruit & Sweets Tray Grid"
-  },
-  {
-    id: "g11",
-    category: "housewarming",
-    title: "Fruit & Sweets Tray Grid",
-    location: "Fruit and sweets tray grid",
-    imageUrl: "/gallery/photos/eleven-tray-fruit-sweets-grid-3.webp",
-    imageAlt: "Fruit & Sweets Tray Grid"
-  },
-  {
-    id: "g12",
-    category: "wedding",
-    title: "Grand Mandala Fruit Arrangement",
-    location: "Trays laid out during preparation",
-    imageUrl: "/gallery/photos/grand-mandala-arrangement.webp",
-    imageAlt: "Grand Mandala Fruit Arrangement"
-  },
-  {
-    id: "g13",
-    category: "custom",
-    title: "Grand Assorted Tray Collection",
-    location: "Full set laid out before packing",
-    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-1.webp",
-    imageAlt: "Grand Assorted Tray Collection"
-  },
-  {
-    id: "g14",
-    category: "wedding",
-    title: "Grand Assorted Tray Collection",
-    location: "Full set laid out before packing",
-    imageUrl: "/gallery/photos/grand-tray-collection-mall-floor-2.webp",
-    imageAlt: "Grand Assorted Tray Collection"
-  },
-  {
-    id: "g15",
-    category: "seemantham",
-    title: "Green & Gold Dry Fruit Trays",
-    location: "Green and gold dry fruit trays",
-    imageUrl: "/gallery/photos/green-gold-dry-fruit-trays.webp",
-    imageAlt: "Green & Gold Dry Fruit Trays"
-  },
-  {
-    id: "g16",
-    category: "engagement",
-    title: "Heart-Pattern Eight Tray Set",
-    location: "Heart-pattern eight-tray set",
-    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-1.webp",
-    imageAlt: "Heart-Pattern Eight Tray Set"
-  },
-  {
-    id: "g17",
-    category: "wedding",
-    title: "Heart-Pattern Eight Tray Set",
-    location: "Heart-pattern eight-tray set",
-    imageUrl: "/gallery/photos/heart-pattern-eight-tray-set-2.webp",
-    imageAlt: "Heart-Pattern Eight Tray Set"
-  },
-  {
-    id: "g18",
-    category: "housewarming",
-    title: "Kitchen Floor Tray Spread",
-    location: "Trays laid out during preparation",
-    imageUrl: "/gallery/photos/kitchen-floor-eleven-tray-spread.webp",
-    imageAlt: "Kitchen Floor Tray Spread"
-  },
-  {
-    id: "g19",
-    category: "seemantham",
-    title: "Laddu, Grape & Pistachio Tray Set",
-    location: "Laddu, grape and pistachio tray set",
-    imageUrl: "/gallery/photos/laddu-grape-pistachio-tray-set.webp",
-    imageAlt: "Laddu, Grape & Pistachio Tray Set"
-  },
-  {
-    id: "g20",
-    category: "wedding",
-    title: "Grand Tray Spread",
-    location: "Full set laid out before packing",
-    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-1.webp",
-    imageAlt: "Grand Tray Spread"
-  },
-  {
-    id: "g21",
-    category: "custom",
-    title: "Grand Tray Spread",
-    location: "Full set laid out before packing",
-    imageUrl: "/gallery/photos/market-floor-grand-tray-spread-2.webp",
-    imageAlt: "Grand Tray Spread"
-  }
-];
-
-/** Eyebrow shown on each card, matching the filter it belongs to. */
-const OCCASION_LABELS: Record<string, string> = {
-  wedding: "Wedding",
-  engagement: "Engagement",
-  seemantham: "Seemantham",
-  housewarming: "Housewarming",
-  custom: "Custom Theme",
-};
-
+/*
+ * Tabs and photo data now come from `@/lib/gallery`, shared with the /gallery
+ * page so the two grids cannot describe the same photograph differently.
+ *
+ * This section shows the featured subset, not the whole library — it is a
+ * preview, and /gallery is where all of them live.
+ */
 const GALLERY_TABS: FilterTab[] = [
   { id: "all", label: "All Photos" },
   { id: "wedding", label: "Weddings" },
@@ -223,8 +44,8 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
   const [activeTab, setActiveTab] = useState<string>("all");
 
   const filteredItems = activeTab === "all"
-    ? GALLERY_ITEMS
-    : GALLERY_ITEMS.filter((g) => g.category === activeTab);
+    ? FEATURED_GALLERY_ITEMS
+    : FEATURED_GALLERY_ITEMS.filter((g) => g.category === activeTab);
 
   return (
     // Whole section — background included — rises and fades in as one panel
@@ -285,6 +106,26 @@ export function GalleryPreviewSection({ onImageClick }: GalleryPreviewSectionPro
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {/*
+            Without this the preview is a dead end: the nav entry for Gallery
+            points at /gallery, so someone who arrives here by scrolling would
+            otherwise never learn the rest of the photographs exist.
+          */}
+          <div className="mt-12 flex flex-col items-center gap-3">
+            <p className="text-sm text-muted-foreground font-sans text-center">
+              Showing {FEATURED_GALLERY_ITEMS.length} of {GALLERY_ITEMS.length} photographs.
+            </p>
+            <Link href="/gallery">
+              <Button
+                variant="outline"
+                size="lg"
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+              >
+                View the full gallery
+              </Button>
+            </Link>
+          </div>
         </Container>
       </Section>
     </GSAPPageEmerge>

@@ -18,14 +18,17 @@ import { BUSINESS } from "@/lib/business";
  * Every entry resolves. Previously six of these pointed at routes that were
  * never built (/collections, /occasions, /gallery, /about, /contact) and every
  * one returned a 404. The homepage sections they described do exist, so the
- * three that map to sections became in-page anchors, and /about and /contact
- * are now real pages.
+ * two that map to sections became in-page anchors, and /about, /contact and
+ * /gallery are now real pages.
+ *
+ * Gallery is a whole page rather than an anchor: the homepage carries a
+ * preview, and the full library of photographs lives at /gallery.
  */
 export const NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "Collections", href: "/#collections" },
   { name: "Occasions", href: "/#occasions" },
-  { name: "Gallery", href: "/#gallery" },
+  { name: "Gallery", href: "/gallery" },
   { name: "About Us", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
