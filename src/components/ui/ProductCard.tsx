@@ -5,7 +5,6 @@ import { Card } from "./Card";
 import { ImageFrame } from "./ImageFrame";
 import { Badge } from "./Badge";
 import { Button } from "./Button";
-import { Sparkles } from "lucide-react";
 
 export interface ProductCardProps {
   title: string;
@@ -77,7 +76,6 @@ export function ProductCard({
             variant="outline"
             size="sm"
             onClick={onEnquire}
-            rightIcon={<Sparkles className="w-3.5 h-3.5 text-accent" />}
           >
             Enquire
           </Button>

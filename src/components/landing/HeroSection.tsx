@@ -12,7 +12,6 @@ import {
   GSAPParallax,
   GSAPImageReveal,
 } from "@/components/animations";
-import { Sparkles } from "lucide-react";
 import { BUSINESS, whatsappHref } from "@/lib/business";
 
 interface HeroSectionProps {
@@ -66,7 +65,6 @@ export function HeroSection({ onEnquireClick, isSplashActive }: HeroSectionProps
                     variant="accent"
                     size="lg"
                     onClick={onEnquireClick}
-                    rightIcon={<Sparkles className="w-4 h-4" aria-hidden="true" />}
                   >
                     Request Custom Tray Set
                   </Button>

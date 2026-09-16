@@ -8,9 +8,10 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { Sparkles, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BUSINESS } from "@/lib/business";
+import { useHomeAnchorClick } from "@/lib/useHomeAnchorClick";
 
 /**
  * Primary navigation.
@@ -51,6 +52,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const handleAnchorClick = useHomeAnchorClick();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,6 +118,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={(e) => handleAnchorClick(link.href, e)}
                     aria-current={active ? "page" : undefined}
                     className={cn(
                       "relative text-sm font-sans font-semibold tracking-wide transition-colors py-1",
@@ -140,11 +143,14 @@ export function Navbar() {
             {/* Actions */}
             <div className="flex items-center gap-2 sm:gap-3 z-10 shrink-0">
               {/* Went to /design-system before — an internal developer page. */}
-              <Link href={ENQUIRY_HREF} className="hidden sm:inline-flex">
+              <Link
+                href={ENQUIRY_HREF}
+                onClick={(e) => handleAnchorClick(ENQUIRY_HREF, e)}
+                className="hidden sm:inline-flex"
+              >
                 <Button
                   variant="primary"
                   size="sm"
-                  rightIcon={<Sparkles className="w-3.5 h-3.5" aria-hidden="true" />}
                 >
                   Enquire Now
                 </Button>

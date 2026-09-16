@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
@@ -14,6 +16,7 @@ import {
   publicEmail,
   publicName,
 } from "@/lib/business";
+import { useHomeAnchorClick } from "@/lib/useHomeAnchorClick";
 
 /**
  * Site footer.
@@ -22,13 +25,16 @@ import {
  * /gallery, /customize and /about — none of which existed — plus the internal
  * /design-system page. Contact details come from `@/lib/business` rather than
  * being retyped, and the phone and email are actionable rather than inert text.
+ *
+ * Gallery is its own page (see Navbar), not the homepage preview section, so
+ * it links straight there rather than to "/#gallery".
  */
 
 const QUICK_LINKS = [
   { name: "Home", href: "/" },
   { name: "Collections", href: "/#collections" },
   { name: "Occasions", href: "/#occasions" },
-  { name: "Gallery", href: "/#gallery" },
+  { name: "Gallery", href: "/gallery" },
   { name: "About Us", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
@@ -52,6 +58,7 @@ const OCCASIONS = [
 export function Footer() {
   const a = BUSINESS.address;
   const email = publicEmail();
+  const handleAnchorClick = useHomeAnchorClick();
 
   return (
     <footer className="w-full bg-secondary/40 text-foreground border-t border-border pt-16 pb-12">
@@ -113,7 +120,11 @@ export function Footer() {
             <ul className="flex flex-col gap-2 text-sm font-sans text-foreground/80">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">
+                  <Link
+                    href={link.href}
+                    onClick={(e) => handleAnchorClick(link.href, e)}
+                    className="hover:text-primary transition-colors"
+                  >
                     {link.name}
                   </Link>
                 </li>

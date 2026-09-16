@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SplashLoader } from "@/components/ui/SplashLoader";
 import { Modal } from "@/components/ui/Modal";
 import { Toast } from "@/components/ui/Toast";
@@ -52,6 +52,18 @@ export function HomePageClient() {
       document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  // Finishes a hash link (e.g. Navbar's "/#collections") that landed here from
+  // another page. Lenis owns the scroll position on every page and resets it
+  // to the top the moment it takes over, so the browser's own jump-to-anchor
+  // never sticks — this redoes it through Lenis once it's ready. Runs once,
+  // the moment `lenis` goes from undefined to the live instance.
+  useEffect(() => {
+    if (!lenis) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+    lenis.scrollTo(hash, { offset: -100, duration: 1.2 });
+  }, [lenis]);
 
   const handleCollectionClick = (collection: {
     title: string;

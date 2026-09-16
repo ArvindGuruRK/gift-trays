@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { pageMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { BUSINESS } from "@/lib/business";
-import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = pageMetadata({
   title: "About Us",
@@ -136,7 +135,6 @@ export default function AboutPage() {
                     <Button
                       variant="primary"
                       size="lg"
-                      rightIcon={<Sparkles className="w-4 h-4" aria-hidden="true" />}
                     >
                       Tell Us About Your Occasion
                     </Button>

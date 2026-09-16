@@ -14,7 +14,7 @@ import { NumberSelector } from "@/components/ui/NumberSelector";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { GSAPTextReveal } from "@/components/animations";
-import { Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import { BUSINESS, whatsappHref } from "@/lib/business";
 
 export interface EnquiryFormData {
@@ -277,7 +277,6 @@ export function InteractiveEnquirySection({ onSubmitEnquiry }: InteractiveEnquir
                 type="submit"
                 variant="primary"
                 size="lg"
-                rightIcon={<Sparkles className="w-4 h-4" aria-hidden="true" />}
               >
                 Send Enquiry via WhatsApp
               </Button>

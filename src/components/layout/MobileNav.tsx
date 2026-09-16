@@ -7,9 +7,10 @@ import { drawerVariants, staggerContainer, staggerItem } from "@/lib/animations"
 import { DiyaLogo } from "@/components/ui/DiyaLogo";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
-import { X, Sparkles, Phone } from "lucide-react";
+import { X, Phone } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { BUSINESS, telHref, whatsappHref } from "@/lib/business";
+import { useHomeAnchorClick } from "@/lib/useHomeAnchorClick";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ interface MobileNavProps {
 
 export function MobileNav({ isOpen, onClose, links, currentPath }: MobileNavProps) {
   const lenis = useLenis();
+  const handleAnchorClick = useHomeAnchorClick();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   // Where focus came from, so it can be handed back on close.
@@ -145,7 +147,10 @@ export function MobileNav({ isOpen, onClose, links, currentPath }: MobileNavProp
                     <motion.div key={link.href} variants={staggerItem}>
                       <Link
                         href={link.href}
-                        onClick={onClose}
+                        onClick={(e) => {
+                          handleAnchorClick(link.href, e);
+                          onClose();
+                        }}
                         aria-current={active ? "page" : undefined}
                         className={`block px-4 py-3 rounded-lg text-base font-sans font-semibold transition-colors ${
                           active
@@ -163,11 +168,17 @@ export function MobileNav({ isOpen, onClose, links, currentPath }: MobileNavProp
 
             <div className="pt-6 border-t border-border/50 flex flex-col gap-3">
               {/* Pointed at /customize before, which 404'd. */}
-              <Link href="/#enquiry-form" onClick={onClose} className="w-full">
+              <Link
+                href="/#enquiry-form"
+                onClick={(e) => {
+                  handleAnchorClick("/#enquiry-form", e);
+                  onClose();
+                }}
+                className="w-full"
+              >
                 <Button
                   variant="primary"
                   fullWidth
-                  rightIcon={<Sparkles className="w-4 h-4" aria-hidden="true" />}
                 >
                   Request a Custom Tray Set
                 </Button>

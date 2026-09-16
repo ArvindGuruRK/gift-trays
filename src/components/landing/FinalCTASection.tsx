@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { KolamCornerFlourish, LotusMotif } from "@/components/ui/Motifs";
 import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { GSAPScrollReveal } from "@/components/animations";
-import { Sparkles, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { BUSINESS, telHref, whatsappHref } from "@/lib/business";
 
 interface FinalCTASectionProps {
@@ -49,7 +49,6 @@ export function FinalCTASection({ onEnquireClick }: FinalCTASectionProps) {
                 variant="accent"
                 size="lg"
                 onClick={onEnquireClick}
-                rightIcon={<Sparkles className="w-4 h-4" aria-hidden="true" />}
               >
                 Request a Quote
               </Button>
