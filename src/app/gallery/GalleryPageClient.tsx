@@ -20,7 +20,7 @@ import {
   OCCASION_LABELS,
   countFor,
 } from "@/lib/gallery";
-import { ArrowLeft, ArrowRight, Camera, Eye, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Eye } from "lucide-react";
 
 /**
  * /gallery — the full photo library.
@@ -104,27 +104,6 @@ export function GalleryPageClient() {
         />
 
         <Container size="lg">
-          {/*
-            A visible breadcrumb, matching the BreadcrumbList structured data
-            the page emits — the machine-readable trail and the human one should
-            not disagree.
-          */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-1.5 text-xs font-sans text-muted-foreground">
-              <li>
-                <Link href="/" className="hover:text-primary transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true">
-                <ChevronRight className="w-3.5 h-3.5" />
-              </li>
-              <li className="text-foreground font-semibold" aria-current="page">
-                Gallery
-              </li>
-            </ol>
-          </nav>
-
           <Heading
             as="h1"
             variant="h1"

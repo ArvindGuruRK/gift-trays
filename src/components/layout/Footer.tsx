@@ -26,14 +26,15 @@ import { useHomeAnchorClick } from "@/lib/useHomeAnchorClick";
  * /design-system page. Contact details come from `@/lib/business` rather than
  * being retyped, and the phone and email are actionable rather than inert text.
  *
- * Gallery is its own page (see Navbar), not the homepage preview section, so
- * it links straight there rather than to "/#gallery".
+ * Gallery, Occasions and Collections are their own pages (see Navbar), not
+ * homepage preview sections, so they link straight there rather than to an
+ * anchor.
  */
 
 const QUICK_LINKS = [
   { name: "Home", href: "/" },
-  { name: "Collections", href: "/#collections" },
-  { name: "Occasions", href: "/#occasions" },
+  { name: "Collections", href: "/collections" },
+  { name: "Occasions", href: "/occasions" },
   { name: "Gallery", href: "/gallery" },
   { name: "About Us", href: "/about" },
   { name: "Contact", href: "/contact" },

@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppLogo } from "@/components/ui/WhatsAppLogo";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { InteractiveEnquirySection } from "@/components/landing";
 import { pageMetadata, breadcrumbJsonLd, localBusinessJsonLd } from "@/lib/seo";
 import {
   BUSINESS,
@@ -186,23 +187,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="mt-10 p-6 rounded-2xl bg-secondary/40 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="font-serif text-xl font-semibold text-foreground">
-                  Rather fill in a form?
-                </h2>
-                <p className="text-sm text-muted-foreground font-sans mt-1">
-                  The enquiry form collects your details and hands them to
-                  WhatsApp for you.
-                </p>
-              </div>
-              <Link href="/#enquiry-form" className="shrink-0">
-                <Button variant="primary" size="lg">
-                  Go to Enquiry Form
-                </Button>
-              </Link>
-            </div>
-
             <div className="mt-6">
               <p className="text-sm text-muted-foreground font-sans">
                 We serve {BUSINESS.serviceAreas.join(" and ")}. Read our{" "}
@@ -214,6 +198,13 @@ export default function ContactPage() {
             </div>
           </Container>
         </Section>
+
+        {/*
+          The enquiry form itself, not just a link out to it. It used to live
+          only on the homepage at "/#enquiry-form" — this page linked out to
+          it instead of having it. Same component, so the two never drift.
+        */}
+        <InteractiveEnquirySection />
       </PageShell>
     </>
   );

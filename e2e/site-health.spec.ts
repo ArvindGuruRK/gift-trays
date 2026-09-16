@@ -13,6 +13,8 @@ import AxeBuilder from "@axe-core/playwright";
 
 const ROUTES = [
   "/",
+  "/collections",
+  "/occasions",
   "/about",
   "/gallery",
   "/contact",
