@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { BackToTop } from "@/components/layout/BackToTop";
+import { InlineScript } from "@/components/ui/InlineScript";
+import { SPLASH_SESSION_KEY, SPLASH_SEEN_ATTR } from "@/lib/splash";
 import { BUSINESS, resolvedSiteUrl, assertBusinessConfigured } from "@/lib/business";
 import "./globals.css";
 
@@ -92,7 +94,35 @@ export default function RootLayout({
     <html
       lang="en-IN"
       className={`${cormorant.variable} ${manrope.variable} antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/*
+          The splash video and the gallery images all come from Cloudinary.
+          Opening the TCP + TLS connection while the HTML is still parsing takes
+          a round trip or two off the first byte of every one of them.
+        */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        {/*
+          Runs synchronously during HTML parsing, before the first paint, so a
+          visitor returning to the homepage from Contact or About never sees the
+          splash flash up and vanish. It also covers visitors who ask for reduced
+          motion, who should never see the spinning platter at all — the overlay
+          is server-rendered, so without this it would be painted for them and
+          only removed once React hydrates. `SplashLoader` decides visibility
+          from these same two signals in a lazy useState initializer, so React's
+          markup agrees with this DOM and there is no hydration mismatch.
+          See node_modules/next/dist/docs/01-app/02-guides/preventing-flash-before-hydration.md
+        */}
+        <InlineScript
+          html={`(function(){try{var s=sessionStorage.getItem(${JSON.stringify(
+            SPLASH_SESSION_KEY
+          )})==="1",r=matchMedia("(prefers-reduced-motion: reduce)").matches;if(s||r)document.documentElement.setAttribute(${JSON.stringify(
+            SPLASH_SEEN_ATTR
+          )},"seen")}catch(e){}})()`}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-accent/20 selection:text-primary">
         <SmoothScrollProvider>
           {children}

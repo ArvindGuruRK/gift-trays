@@ -874,3 +874,16 @@ input[type="checkbox"]:not(.sr-only) {
   overflow-x: auto;
   max-width: 100%;
 }
+
+/*
+ * Splash session gate.
+ *
+ * The overlay is server-rendered, so on a repeat visit within the same session
+ * it exists in the HTML before React can remove it. The inline script in the
+ * root layout sets `data-splash="seen"` on <html> during HTML parsing; this rule
+ * hides the overlay in the same pass, before the browser's first paint. Without
+ * it the splash visibly flashes every time you navigate back to the homepage.
+ */
+html[data-splash="seen"] [data-splash-root] {
+  display: none !important;
+}

@@ -24,10 +24,20 @@ const ROUTES = [
 /** Hosts the site is allowed to talk to. Anything else is a tracker or an embed. */
 const ALLOWED_HOSTS = ["localhost", "127.0.0.1", "res.cloudinary.com"];
 
-/** The splash overlay holds the homepage for ~2.6s before content settles. */
+/**
+ * The homepage splash now lifts on readiness rather than on a fixed timer
+ * (floor 900ms, hard ceiling 2400ms), so wait for the overlay to actually
+ * detach instead of guessing a duration. The timeout covers the ceiling plus
+ * the exit fade with room to spare.
+ */
 async function gotoSettled(page: Page, route: string) {
   await page.goto(route, { waitUntil: "domcontentloaded" });
-  if (route === "/") await page.waitForTimeout(3200);
+  if (route === "/") {
+    await page
+      .locator("[data-splash-root]")
+      .waitFor({ state: "detached", timeout: 6000 })
+      .catch(() => {});
+  }
   await page.waitForLoadState("networkidle").catch(() => {});
 }
 
@@ -167,7 +177,17 @@ test.describe("Privacy", () => {
     ).toEqual([]);
   });
 
-  test("no browser storage is written", async ({ page }) => {
+  /**
+   * The only client-side storage the site is allowed to write. Both are
+   * strictly functional, hold nothing that identifies a visitor, and are
+   * disclosed on /cookie-policy. Anything beyond this list is a regression —
+   * it would mean the cookie policy has quietly become untrue.
+   */
+  const ALLOWED_SESSION_KEYS = ["svt.splash.seen"];
+
+  test("no browser storage is written beyond the disclosed splash flag", async ({
+    page,
+  }) => {
     for (const route of ROUTES) {
       await gotoSettled(page, route);
       const stored = await page.evaluate(() => ({
@@ -175,7 +195,10 @@ test.describe("Privacy", () => {
         session: Object.keys(window.sessionStorage),
       }));
       expect(stored.local, `localStorage written on ${route}`).toEqual([]);
-      expect(stored.session, `sessionStorage written on ${route}`).toEqual([]);
+      expect(
+        stored.session.filter((k) => !ALLOWED_SESSION_KEYS.includes(k)),
+        `undisclosed sessionStorage written on ${route}`
+      ).toEqual([]);
     }
   });
 });

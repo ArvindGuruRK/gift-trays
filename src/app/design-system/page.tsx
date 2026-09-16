@@ -90,7 +90,7 @@ export default function DesignSystemPage() {
       {showSplashPreview && (
         <SplashLoader
           forceShow={true}
-          minDuration={3000}
+          playbackDuration={3000}
           onComplete={() => setShowSplashPreview(false)}
         />
       )}

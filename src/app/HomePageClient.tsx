@@ -32,6 +32,10 @@ import {
 export function HomePageClient() {
   const lenis = useLenis();
 
+  // Deliberately not seeded from sessionStorage: that is a client-only value,
+  // and reading it here made the server and client render different trees.
+  // `SplashLoader` fires `onComplete` immediately when it has nothing to show,
+  // so a repeat visitor's animations are released on the first tick anyway.
   const [isSplashActive, setIsSplashActive] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
@@ -76,7 +80,7 @@ export function HomePageClient() {
 
   return (
     <>
-      <SplashLoader onComplete={() => setIsSplashActive(false)} minDuration={2600} />
+      <SplashLoader onComplete={() => setIsSplashActive(false)} />
 
       <HeroSection isSplashActive={isSplashActive} onEnquireClick={scrollToEnquiry} />
 

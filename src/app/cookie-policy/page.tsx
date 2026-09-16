@@ -65,16 +65,36 @@ export default function CookiePolicyPage() {
 
       <h2>Local storage</h2>
       <p>
-        The site does not use browser local storage, session storage or any
-        other client-side store. Nothing about your visit is kept in your
-        browser between page loads.
+        The site uses two strictly functional client-side stores. Neither
+        identifies you, neither is read by us, and nothing either one holds ever
+        leaves your browser:
+      </p>
+      <ul>
+        <li>
+          <strong>Session storage</strong> holds a single flag recording that
+          the opening animation has already played, so it is not repeated every
+          time you move between pages. It is erased the moment you close the
+          tab.
+        </li>
+        <li>
+          <strong>Cache storage</strong> keeps a copy of the short decorative
+          video used in that opening animation, so returning to the site does
+          not re-download it. It contains only that video file.
+        </li>
+      </ul>
+      <p>
+        Both are technical necessities for the site to work as intended rather
+        than a way of learning anything about you, so no consent is required for
+        them. We still store no analytics, no identifiers and no profile of your
+        visit.
       </p>
 
       <h2>What this means for you</h2>
       <p>
         You can browse this site without being tracked, profiled or measured. We
         genuinely do not know who visits, how many people visit, or which pages
-        they read.
+        they read. The two stores described above stay on your device and are
+        never sent anywhere.
       </p>
 
       <h2>If this changes</h2>
